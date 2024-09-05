@@ -1,6 +1,4 @@
 locals {
-  log_group_name = ""
-
   wg_conf_name = "wg-conf"
 
   container_definitions = jsonencode([
