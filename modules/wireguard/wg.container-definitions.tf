@@ -82,9 +82,10 @@ locals {
       ]
     },
     {
-      name      = "healthcheck",
-      image     = "busybox:latest",
-      essential = true,
+      name              = "healthcheck",
+      image             = "busybox:latest",
+      essential         = true,
+      memoryReservation = 32
       portMappings = [
         {
           "containerPort" : var.health_check_port,

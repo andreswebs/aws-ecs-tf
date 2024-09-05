@@ -19,10 +19,10 @@ resource "aws_vpc_security_group_ingress_rule" "lb_udp" {
 
 resource "aws_vpc_security_group_egress_rule" "lb_allow_all" {
   security_group_id = aws_security_group.lb.id
-  ip_protocol       = "-1"
-  from_port         = 0
-  to_port           = 0
   cidr_ipv4         = "0.0.0.0/0"
+  from_port         = -1
+  ip_protocol       = -1
+  to_port           = -1
 }
 
 resource "aws_security_group" "instance" {
@@ -38,10 +38,10 @@ resource "aws_security_group" "instance" {
 
 resource "aws_vpc_security_group_egress_rule" "instance_allow_all" {
   security_group_id = aws_security_group.instance.id
-  ip_protocol       = "-1"
-  from_port         = 0
-  to_port           = 0
   cidr_ipv4         = "0.0.0.0/0"
+  from_port         = -1
+  ip_protocol       = -1
+  to_port           = -1
 }
 
 resource "aws_vpc_security_group_ingress_rule" "instance_udp" {
