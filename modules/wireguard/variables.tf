@@ -1,6 +1,5 @@
 variable "cluster_name" {
-  type        = string
-  description = "ECS cluster name"
+  type = string
 }
 
 variable "vpc_id" {
@@ -50,31 +49,54 @@ variable "instance_type" {
   description = "ECS container-instance type"
 }
 
-variable "log_retention_in_days" {
-  type        = number
-  default     = 30
-  description = "CloudWatch Logs retention in days"
-}
-
-# variable "instance_profile_name" {
-#   type        = string
-#   description = "ECS container-instance IAM profile name"
-# }
-
 # variable "container_port" {
 #   type        = number
 #   description = "The app container exposed port"
 #   default     = 8080
 # }
 
-variable "health_check_path" {
+variable "task_role_name" {
+  description = "The name of the task role"
   type        = string
-  description = "The health check path"
-  default     = "/health"
+  default     = "ecs-task-wireguard"
 }
 
-variable "certificate_arn" {
+variable "execution_role_name" {
+  description = "The name of the execution role"
   type        = string
-  description = "The ARN of the SSL certificate"
-  default     = null
+  default     = "ecs-execution-wireguard"
+}
+
+variable "instance_role_name" {
+  description = "The name of the instance role"
+  type        = string
+  default     = "ecs-instance-wireguard"
+}
+
+variable "instance_profile_name" {
+  description = "The name of the instance profile"
+  type        = string
+  default     = "ecs-wireguard"
+}
+
+#############
+
+variable "app_uid" {
+  type    = number
+  default = 2000
+}
+
+variable "app_gid" {
+  type    = number
+  default = 2000
+}
+
+variable "root_dir_permissions" {
+  type    = number
+  default = 0750
+}
+
+variable "root_dir_path" {
+  type    = string
+  default = "/wireguard"
 }
