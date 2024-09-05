@@ -49,11 +49,29 @@ variable "instance_type" {
   description = "ECS container-instance type"
 }
 
-# variable "container_port" {
-#   type        = number
-#   description = "The app container exposed port"
-#   default     = 8080
-# }
+variable "container_port" {
+  type        = number
+  description = "The app container exposed port"
+  default     = 51820
+}
+
+variable "health_check_port" {
+  type        = number
+  description = "The health check container exposed port"
+  default     = 8080
+}
+
+variable "health_check_path" {
+  type        = string
+  description = "The health check path"
+  default     = "/"
+}
+
+variable "health_check_protocol" {
+  type        = string
+  description = "The health check protocol"
+  default     = "HTTP"
+}
 
 variable "task_role_name" {
   description = "The name of the task role"
@@ -80,6 +98,8 @@ variable "instance_profile_name" {
 }
 
 #############
+## EFS
+#############
 
 variable "app_uid" {
   type    = number
@@ -91,12 +111,38 @@ variable "app_gid" {
   default = 2000
 }
 
-variable "root_dir_permissions" {
+variable "efs_root_dir_permissions" {
   type    = number
   default = 0750
 }
 
-variable "root_dir_path" {
+variable "efs_root_dir_path" {
   type    = string
   default = "/wireguard"
+}
+
+########
+## wg
+########
+
+variable "wg_serverurl" {
+  description = "The URL of the WireGuard server"
+  type        = string
+}
+
+variable "wg_peers" {
+  description = "The peers for the WireGuard server"
+  type        = string
+}
+
+variable "wg_allowedips" {
+  description = "The allowed IPs for the WireGuard server, used for split tunneling"
+  type        = string
+  default     = "10.0.0.0/8"
+}
+
+variable "wg_image" {
+  description = "The WireGuard container image to use"
+  type        = string
+  default     = "lscr.io/linuxserver/wireguard:latest"
 }

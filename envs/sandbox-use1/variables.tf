@@ -56,25 +56,17 @@ variable "log_retention_in_days" {
   description = "CloudWatch Logs retention in days"
 }
 
-# variable "instance_profile_name" {
-#   type        = string
-#   description = "ECS container-instance IAM profile name"
-# }
 
-# variable "container_port" {
-#   type        = number
-#   description = "The app container exposed port"
-#   default     = 8080
-# }
+########
+## wg
+########
 
-variable "health_check_path" {
+variable "wg_serverurl" {
+  description = "The URL of the WireGuard server"
   type        = string
-  description = "The health check path"
-  default     = "/health"
 }
 
-variable "certificate_arn" {
+variable "wg_peers" {
+  description = "The peers for the WireGuard server"
   type        = string
-  description = "The ARN of the SSL certificate"
-  default     = null
 }
