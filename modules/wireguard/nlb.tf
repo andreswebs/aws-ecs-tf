@@ -11,7 +11,7 @@ resource "aws_lb_target_group" "this" {
   name        = var.cluster_name
   vpc_id      = var.vpc_id
   protocol    = "UDP"
-  target_type = "ip"
+  target_type = "instance"
   port        = var.container_port
 
   health_check {
