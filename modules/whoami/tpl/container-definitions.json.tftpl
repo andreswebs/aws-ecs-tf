@@ -1,0 +1,31 @@
+[
+  {
+    "name": "whoami",
+    "image": "traefik/whoami",
+    "memoryReservation": 256,
+    "essential": true,
+    "linuxParameters": {
+      "initProcessEnabled": true
+    },
+    "environment": [
+      {
+        "name": "WHOAMI_PORT_NUMBER",
+        "value": "${container_port}"
+      }
+    ],
+    "portMappings": [
+      {
+        "name": "http",
+        "containerPort": ${container_port},
+        "protocol": "tcp"
+      }
+    ],
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "${log_group_name}",
+        "awslogs-region": "${aws_region}"
+      }
+    }
+  }
+]

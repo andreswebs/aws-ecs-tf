@@ -1,0 +1,15 @@
+.DS_Store
+.envrc
+
+.external_modules/
+
+.terraform
+.terraform.lock.hcl
+*.tfvars*
+*.tfstate*
+*.tfbackend*
+!example.s3.tfbackend
+
+*.diff
+*.bak
+*.kubeconfig*

@@ -1,0 +1,50 @@
+[
+  {
+    "name": "jaeger",
+    "image": "jaegertracing/all-in-one:latest",
+    "memoryReservation": 1024,
+    "essential": true,
+    "linuxParameters": {
+      "initProcessEnabled": true
+    },
+    "environment": [
+      {
+        "name": "SPAN_STORAGE_TYPE",
+        "value": "elasticsearch"
+      },
+      {
+        "name": "ES_SERVER_URLS",
+        "value": "${jaeger_es_server_urls}"
+      }
+    ],
+    "portMappings": [
+      {
+        "name": "jaeger-ui",
+        "containerPort": 16686,
+        "protocol": "tcp"
+      },
+      {
+        "name": "jaeger-ui-adm",
+        "containerPort": 16687,
+        "protocol": "tcp"
+      },
+      {
+        "name": "jaeger-collector-http",
+        "containerPort": 14268,
+        "protocol": "tcp"
+      },
+      {
+        "name": "jaeger-collector-http-adm",
+        "containerPort": 14269,
+        "protocol": "tcp"
+      }
+    ],
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "${log_group_name}",
+        "awslogs-region": "${aws_region}"
+      }
+    }
+  }
+]
