@@ -9,8 +9,6 @@ locals {
       memoryReservation = 256
       essential         = true
 
-      user = "${var.app_uid}:${var.app_gid}"
-
       linuxParameters = {
         initProcessEnabled = true
         capabilities = {

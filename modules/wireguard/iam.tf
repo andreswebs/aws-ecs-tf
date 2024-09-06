@@ -7,8 +7,8 @@ module "ecs_iam" {
   instance_profile_name = var.instance_profile_name
 }
 
-resource "aws_iam_role_policy" "task_efs_access" {
+resource "aws_iam_role_policy" "efs_access" {
   name   = "efs-access"
-  role   = module.ecs_iam.role.task.name
+  role   = module.ecs_iam.role.execution.name
   policy = module.efs.client_policy.json
 }

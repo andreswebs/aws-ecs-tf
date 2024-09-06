@@ -12,8 +12,8 @@ resource "aws_security_group" "lb" {
 resource "aws_vpc_security_group_ingress_rule" "lb_udp" {
   security_group_id = aws_security_group.lb.id
   ip_protocol       = "UDP"
-  from_port         = 51820
-  to_port           = 51820
+  from_port         = var.container_port
+  to_port           = var.container_port
   cidr_ipv4         = "0.0.0.0/0"
 }
 
@@ -48,6 +48,14 @@ resource "aws_vpc_security_group_ingress_rule" "instance_udp" {
   security_group_id            = aws_security_group.instance.id
   referenced_security_group_id = aws_security_group.lb.id
   ip_protocol                  = "UDP"
-  from_port                    = 51820
-  to_port                      = 51820
+  from_port                    = var.container_port
+  to_port                      = var.container_port
+}
+
+resource "aws_vpc_security_group_ingress_rule" "instance_tcp" {
+  security_group_id            = aws_security_group.instance.id
+  referenced_security_group_id = aws_security_group.lb.id
+  ip_protocol                  = "TCP"
+  from_port                    = var.health_check_port
+  to_port                      = var.health_check_port
 }

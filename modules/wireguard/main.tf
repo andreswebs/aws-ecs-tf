@@ -161,6 +161,7 @@ resource "aws_ecs_service" "this" {
 
   enable_ecs_managed_tags = true
   enable_execute_command  = true
+  force_new_deployment    = true
   scheduling_strategy     = "DAEMON"
   launch_type             = "EC2"
 
@@ -168,6 +169,11 @@ resource "aws_ecs_service" "this" {
     target_group_arn = aws_lb_target_group.this.arn
     container_name   = "wireguard"
     container_port   = var.container_port
+  }
+
+  deployment_circuit_breaker {
+    enable   = true
+    rollback = true
   }
 
 }
