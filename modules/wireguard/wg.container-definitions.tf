@@ -49,11 +49,7 @@ locals {
         },
         {
           name  = "LOG_CONFS"
-          value = "true"
-        },
-        {
-          name  = "INTERNAL_SUBNET"
-          value = "10.13.13.0" # only change if it clashes
+          value = "false"
         },
         {
           name  = "SERVERPORT"
@@ -62,6 +58,10 @@ locals {
         {
           name  = "SERVERURL" # =wireguard.example.com
           value = var.wg_serverurl
+        },
+        {
+          name  = "INTERNAL_SUBNET"
+          value = var.wg_internal_subnet
         },
         {
           name  = "PEERS"

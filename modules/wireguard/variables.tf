@@ -152,3 +152,8 @@ variable "wg_image" {
   type        = string
   default     = "linuxserver/wireguard:latest"
 }
+
+variable "wg_internal_subnet" {
+  type = string
+  default = "10.13.13.0" # only change if it clashes
+}

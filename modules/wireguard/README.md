@@ -2,6 +2,24 @@
 
 ![Highly-Available WireGuard service on AWS ECS](./docs/ecs-wireguard.drawio.png "Highly-Available WireGuard service on AWS ECS")
 
+## Download peer configuration
+
+Connect to the WireGuard container:
+
+```sh
+aws ecs execute-command --cluster "${CLUSTER_NAME}" \
+    --task "${TASK_ID}" \
+    --container wireguard \
+    --interactive \
+    --command "/bin/bash"
+```
+
+Copy the contents of the peer `.conf` file:
+
+```txt
+cat /config/peer_<name>/peer_<name>.conf
+```
+
 ## References
 
 <https://www.procustodibus.com/blog/2022/05/wireguard-on-ecs/>
