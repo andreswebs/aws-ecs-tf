@@ -129,8 +129,8 @@ resource "aws_ecs_cluster_capacity_providers" "this" {
 }
 
 resource "aws_cloudwatch_log_group" "this" {
-  name = "/aws/ecs/${var.cluster_name}"
-  # retention_in_days = var.log_retention_in_days
+  name              = "/aws/ecs/${var.cluster_name}"
+  retention_in_days = var.log_retention_in_days
 }
 
 locals {
@@ -139,7 +139,7 @@ locals {
 
 resource "aws_ecs_task_definition" "this" {
   family                   = "wireguard"
-  network_mode             = "host"
+  network_mode             = "bridge"
   requires_compatibilities = ["EC2"]
   execution_role_arn       = module.ecs_iam.role.execution.arn
   task_role_arn            = module.ecs_iam.role.task.arn
@@ -156,6 +156,12 @@ resource "aws_ecs_task_definition" "this" {
       }
     }
   }
+
+  volume {
+    name      = local.lib_modules_name
+    host_path = "/lib/modules"
+  }
+
 }
 
 resource "aws_ecs_service" "this" {

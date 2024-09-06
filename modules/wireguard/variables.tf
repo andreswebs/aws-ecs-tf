@@ -97,6 +97,12 @@ variable "instance_profile_name" {
   default     = "ecs-wireguard"
 }
 
+variable "log_retention_in_days" {
+  description = "Log retention days"
+  type        = number
+  default     = 30
+}
+
 #############
 ## EFS
 #############
@@ -144,5 +150,5 @@ variable "wg_allowedips" {
 variable "wg_image" {
   description = "The WireGuard container image to use"
   type        = string
-  default     = "lscr.io/linuxserver/wireguard:latest"
+  default     = "linuxserver/wireguard:latest"
 }

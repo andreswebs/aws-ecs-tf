@@ -1,4 +1,5 @@
 resource "aws_lb" "this" {
+  name               = var.cluster_name
   internal           = false
   load_balancer_type = "network"
   subnets            = var.public_subnet_ids

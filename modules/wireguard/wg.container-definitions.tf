@@ -1,5 +1,6 @@
 locals {
-  wg_conf_name = "wg-conf"
+  wg_conf_name     = "wg-conf"
+  lib_modules_name = "lib-modules"
 
   container_definitions = jsonencode([
     {
@@ -13,9 +14,25 @@ locals {
         capabilities = {
           add = [
             "NET_ADMIN",
+            "SYS_MODULE",
           ]
         }
       }
+
+      systemControls = [
+        {
+          namespace = "net.ipv4.conf.all.src_valid_mark"
+          value     = "1"
+        },
+        {
+          namespace = "net.ipv4.ip_forward"
+          value     = "1"
+        },
+        {
+          namespace = "net.ipv4.conf.all.proxy_arp"
+          value     = "1"
+        },
+      ]
 
       environment = [
         {
@@ -61,7 +78,8 @@ locals {
           name          = "udp"
           protocol      = "udp"
           containerPort = var.container_port
-        }
+          hostPort      = var.container_port
+        },
       ]
 
       logConfiguration = {
@@ -75,8 +93,12 @@ locals {
       mountPoints = [
         {
           sourceVolume  = local.wg_conf_name
-          containerPath = "/etc/wireguard"
+          containerPath = "/config"
         },
+        {
+          sourceVolume  = local.lib_modules_name
+          containerPath = "/lib/modules"
+        }
       ]
     },
     {
@@ -86,9 +108,10 @@ locals {
       memoryReservation = 32
       portMappings = [
         {
-          "containerPort" : var.health_check_port,
-          "hostPort" : var.health_check_port,
-          "protocol" : "tcp"
+          name          = "healthcheck"
+          protocol      = "tcp"
+          containerPort = var.health_check_port,
+          hostPort      = var.health_check_port,
         }
       ],
       entryPoint = [
