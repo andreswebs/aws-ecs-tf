@@ -95,10 +95,12 @@ locals {
         {
           sourceVolume  = local.wg_conf_name
           containerPath = "/config"
+          readOnly      = false
         },
         {
           sourceVolume  = local.lib_modules_name
           containerPath = "/lib/modules"
+          readOnly      = false
         }
       ]
     },
@@ -106,7 +108,7 @@ locals {
       name              = "healthcheck",
       image             = "busybox:latest",
       essential         = true,
-      memoryReservation = 32
+      memoryReservation = 64
       portMappings = [
         {
           name          = "healthcheck"
