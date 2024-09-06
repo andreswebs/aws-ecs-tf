@@ -29,8 +29,8 @@ resource "aws_lb_target_group" "ui" {
 
   health_check {
     protocol = "HTTP"
-    port                = 16687
-    path = "/"
+    port     = 16687
+    path     = "/"
 
   }
 

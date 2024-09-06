@@ -138,11 +138,11 @@ resource "aws_ecs_task_definition" "this" {
   volume {
     name = local.wg_conf_name
     efs_volume_configuration {
-      file_system_id          = module.efs.file_system.id
-      root_directory          = var.efs_root_dir_path
-      transit_encryption      = "ENABLED"
+      file_system_id     = module.efs.file_system.id
+      root_directory     = var.efs_root_dir_path
+      transit_encryption = "ENABLED"
       authorization_config {
-        iam             = "ENABLED"
+        iam = "ENABLED"
       }
     }
   }

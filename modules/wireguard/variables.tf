@@ -153,6 +153,6 @@ variable "wg_image" {
 }
 
 variable "wg_internal_subnet" {
-  type = string
+  type    = string
   default = "10.13.13.0" # only change if it clashes
 }

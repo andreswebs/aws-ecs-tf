@@ -142,7 +142,7 @@ resource "aws_ecs_task_definition" "this" {
 }
 
 resource "aws_ecs_service" "this" {
-  depends_on     = [aws_lb.this]
+  depends_on      = [aws_lb.this]
   name            = "jaeger-all-in-one"
   cluster         = aws_ecs_cluster.this.id
   task_definition = aws_ecs_task_definition.this.arn

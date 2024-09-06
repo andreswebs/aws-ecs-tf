@@ -92,7 +92,7 @@ locals {
       }
 
       healthCheck = {
-        command = [ "CMD-SHELL", "ip link show wg0 up  || exit 1" ]
+        command = ["CMD-SHELL", "ip link show wg0 up  || exit 1"]
       }
 
       mountPoints = [
@@ -130,7 +130,7 @@ locals {
       ]
 
       healthCheck = {
-        command = [ "CMD-SHELL", "which ip  || exit 1" ]
+        command = ["CMD-SHELL", "which ip  || exit 1"]
       }
 
     }
