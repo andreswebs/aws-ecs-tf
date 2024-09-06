@@ -91,6 +91,10 @@ locals {
         }
       }
 
+      healthCheck = {
+        command = [ "CMD-SHELL", "ip link show wg0 up  || exit 1" ]
+      }
+
       mountPoints = [
         {
           sourceVolume  = local.wg_conf_name
@@ -124,6 +128,11 @@ locals {
       command = [
         "while true; do { echo -e 'HTTP/1.1 200 OK\r\n'; echo 'ok'; } | nc -l -p ${var.health_check_port}; done"
       ]
+
+      healthCheck = {
+        command = [ "CMD-SHELL", "which ip  || exit 1" ]
+      }
+
     }
   ])
 
