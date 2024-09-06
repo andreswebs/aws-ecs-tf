@@ -9,6 +9,8 @@ locals {
       memoryReservation = 256
       essential         = true
 
+      user = "${var.app_uid}:${var.app_gid}"
+
       linuxParameters = {
         initProcessEnabled = true
         capabilities = {
@@ -85,8 +87,9 @@ locals {
       logConfiguration = {
         logDriver = "awslogs"
         options = {
-          awslogs-group  = local.log_group_name
-          awslogs-region = local.region
+          awslogs-group         = local.log_group_name
+          awslogs-region        = local.region
+          awslogs-stream-prefix = "wireguard"
         }
       }
 

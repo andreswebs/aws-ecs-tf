@@ -22,11 +22,10 @@ resource "aws_vpc_security_group_egress_rule" "this" {
 
 module "efs" {
   source                     = "andreswebs/efs/aws"
-  version                    = "0.0.2"
+  version                    = "0.0.4"
   name                       = var.cluster_name
   subnet_ids                 = var.private_subnet_ids
   allowed_security_group_ids = [aws_security_group.efs_access.id]
-  allowed_principal_arns     = [module.ecs_iam.role.execution.arn]
 
   app_gid = var.app_gid
   app_uid = var.app_uid
