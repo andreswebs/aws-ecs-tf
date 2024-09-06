@@ -27,13 +27,13 @@ variable "public_subnet_ids" {
 
 variable "cluster_desired_capacity" {
   type        = number
-  default     = 1
+  default     = 2
   description = "ECS cluster ASG desired capacity"
 }
 
 variable "cluster_max_size" {
   type        = number
-  default     = 3
+  default     = 4
   description = "ECS cluster ASG maximum instance count"
 }
 
@@ -73,6 +73,10 @@ variable "health_check_protocol" {
   default     = "HTTP"
 }
 
+##############
+## ECS IAM
+##############
+
 variable "task_role_name" {
   description = "The name of the task role"
   type        = string
@@ -104,7 +108,7 @@ variable "log_retention_in_days" {
 }
 
 #############
-## EFS
+## WG
 #############
 
 variable "app_uid" {
@@ -115,11 +119,6 @@ variable "app_uid" {
 variable "app_gid" {
   type    = number
   default = 2000
-}
-
-variable "efs_root_dir_permissions" {
-  type    = number
-  default = 0750
 }
 
 variable "efs_root_dir_path" {
