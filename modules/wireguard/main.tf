@@ -139,10 +139,9 @@ resource "aws_ecs_task_definition" "this" {
     name = local.wg_conf_name
     efs_volume_configuration {
       file_system_id          = module.efs.file_system.id
-      root_directory          = "/"
+      root_directory          = "/wireguard"
       transit_encryption      = "ENABLED"
       authorization_config {
-        access_point_id = module.efs.access_point.id
         iam             = "ENABLED"
       }
     }

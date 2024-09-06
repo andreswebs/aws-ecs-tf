@@ -10,7 +10,7 @@ locals {
       essential         = true
 
       linuxParameters = {
-        initProcessEnabled = true
+        initProcessEnabled = false
         capabilities = {
           add = [
             "NET_ADMIN",

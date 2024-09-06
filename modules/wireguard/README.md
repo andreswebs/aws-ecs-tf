@@ -1,3 +1,7 @@
+# Highly-Available WireGuard service on AWS ECS
+
+![Highly-Available WireGuard service on AWS ECS](./docs/ecs-wireguard.drawio.png "Highly-Available WireGuard service on AWS ECS")
+
 ## References
 
 <https://www.procustodibus.com/blog/2022/05/wireguard-on-ecs/>
@@ -21,6 +25,8 @@
 <https://stackoverflow.com/questions/57698978/healthcheck-for-networkloadbalancer-with-udp-ecs-service>
 
 <https://github.com/aws/containers-roadmap/issues/850>
+
+<https://www.procustodibus.com/blog/2021/03/wireguard-health-check-for-python-3/>
 
 ## Acknowledgements
 
