@@ -161,7 +161,7 @@ resource "aws_ecs_service" "this" {
 
   enable_ecs_managed_tags = true
   enable_execute_command  = true
-  force_new_deployment    = true
+  force_new_deployment    = var.force_new_deployment
   scheduling_strategy     = "DAEMON"
   launch_type             = "EC2"
 

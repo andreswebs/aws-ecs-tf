@@ -70,7 +70,6 @@ The linuxservers.io images use S6 process supervision, through a project maintai
 
 <https://darkghosthunter.medium.com/how-to-understand-s6-overlay-v3-95c81c04f075>
 
-
 ## Acknowledgements
 
 <https://github.com/rupertbg/aws-wireguard-linux>

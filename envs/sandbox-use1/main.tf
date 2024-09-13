@@ -6,4 +6,6 @@ module "wireguard" {
   public_subnet_ids  = var.public_subnet_ids
   wg_serverurl       = var.wg_serverurl
   wg_peers           = var.wg_peers
+
+  force_new_deployment = var.force_new_deployment
 }

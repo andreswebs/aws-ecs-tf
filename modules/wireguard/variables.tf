@@ -73,6 +73,12 @@ variable "health_check_protocol" {
   default     = "HTTP"
 }
 
+variable "force_new_deployment" {
+  type        = bool
+  description = "Force new deployment?"
+  default     = true
+}
+
 ##############
 ## ECS IAM
 ##############
@@ -125,10 +131,6 @@ variable "efs_root_dir_path" {
   type    = string
   default = "/wireguard"
 }
-
-########
-## wg
-########
 
 variable "wg_serverurl" {
   description = "The URL of the WireGuard server"

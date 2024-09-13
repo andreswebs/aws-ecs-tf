@@ -56,6 +56,11 @@ variable "log_retention_in_days" {
   description = "CloudWatch Logs retention in days"
 }
 
+variable "force_new_deployment" {
+  type        = bool
+  description = "Force new deployment?"
+  default     = true
+}
 
 ########
 ## wg
