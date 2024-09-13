@@ -51,14 +51,14 @@ variable "instance_type" {
 
 variable "container_port" {
   type        = number
-  description = "The app container exposed port"
+  description = "The app exposed port"
   default     = 51820
 }
 
 variable "health_check_port" {
   type        = number
-  description = "The health check container exposed port"
-  default     = 8080
+  description = "The health check exposed port"
+  default     = 9000
 }
 
 variable "health_check_path" {

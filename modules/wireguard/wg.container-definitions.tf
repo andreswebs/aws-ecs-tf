@@ -71,15 +71,25 @@ locals {
           name  = "ALLOWEDIPS" # split tunneling: set this to only the IPs that will use the tunnel AND the WG server's ip, such as 10.13.13.1.
           value = var.wg_allowedips
         },
+        {
+          name  = "DOCKER_MODS"
+          value = "andreswebs/wghealth:latest"
+        },
       ]
 
       portMappings = [
         {
-          name          = "udp"
+          name          = "wireguard"
           protocol      = "udp"
           containerPort = var.container_port
           hostPort      = var.container_port
         },
+        {
+          name          = "healthcheck"
+          protocol      = "tcp"
+          containerPort = var.health_check_port,
+          hostPort      = var.health_check_port,
+        }
       ]
 
       logConfiguration = {
@@ -108,32 +118,7 @@ locals {
         }
       ]
     },
-    {
-      name              = "healthcheck",
-      image             = "busybox:latest",
-      essential         = true,
-      memoryReservation = 64
-      portMappings = [
-        {
-          name          = "healthcheck"
-          protocol      = "tcp"
-          containerPort = var.health_check_port,
-          hostPort      = var.health_check_port,
-        }
-      ],
-      entryPoint = [
-        "sh",
-        "-c"
-      ],
-      command = [
-        "while true; do { echo -e 'HTTP/1.1 200 OK\r\n'; echo 'ok'; } | nc -l -p ${var.health_check_port}; done"
-      ]
 
-      healthCheck = {
-        command = ["CMD-SHELL", "which ip  || exit 1"]
-      }
-
-    }
+    # local.wg_dummy_healthcheck,
   ])
-
 }
