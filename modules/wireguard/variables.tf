@@ -79,6 +79,24 @@ variable "force_new_deployment" {
   default     = true
 }
 
+variable "log_group_name_prefix" {
+  description = "Log group name prefix"
+  type        = string
+  default     = "/aws/ecs/"
+}
+
+variable "log_stream_prefix" {
+  description = "Log stream prefix"
+  type        = string
+  default     = "wireguard"
+}
+
+variable "log_retention_in_days" {
+  description = "Log retention days"
+  type        = number
+  default     = 30
+}
+
 ##############
 ## ECS IAM
 ##############
@@ -105,12 +123,6 @@ variable "instance_profile_name" {
   description = "The name of the instance profile"
   type        = string
   default     = "ecs-wireguard"
-}
-
-variable "log_retention_in_days" {
-  description = "Log retention days"
-  type        = number
-  default     = 30
 }
 
 #############
@@ -154,7 +166,14 @@ variable "wg_image" {
   default     = "linuxserver/wireguard:latest"
 }
 
+variable "wg_docker_mods" {
+  description = "Docker Mods to use"
+  type        = string
+  default     = "andreswebs/wghealth:latest"
+}
+
 variable "wg_internal_subnet" {
   type    = string
-  default = "10.13.13.0" # only change if it clashes
+  description = "The internal subnet used by WireGuard; only change if it clashes with existing subnet ranges"
+  default = "10.13.13.0"
 }

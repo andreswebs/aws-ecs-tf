@@ -13,9 +13,12 @@ data "aws_ami" "ecs_ami_latest" {
   owners = ["amazon"]
 }
 
+
 locals {
   region     = data.aws_region.current.name
   ecs_ami_id = data.aws_ami.ecs_ami_latest.id
+  // TODO:
+  // ecs_ami_id = "resolve:ssm:/aws/service/ecs/optimized-ami/amazon-linux-2023/recommended"
 
   user_data = base64encode(templatefile("${path.module}/tpl/userdata.tftpl", {
     cluster_name = var.cluster_name
@@ -49,7 +52,7 @@ resource "aws_launch_template" "this" {
   tag_specifications {
     resource_type = "instance"
     tags = {
-      Name = "ecs-${var.cluster_name}-node"
+      Name = "ecs-node-${var.cluster_name}"
     }
   }
 
@@ -57,7 +60,6 @@ resource "aws_launch_template" "this" {
     create_before_destroy = true
   }
 }
-
 
 resource "aws_autoscaling_group" "this" {
 
@@ -119,7 +121,7 @@ resource "aws_ecs_cluster_capacity_providers" "this" {
 }
 
 resource "aws_cloudwatch_log_group" "this" {
-  name              = "/aws/ecs/${var.cluster_name}"
+  name              = "${var.log_group_name_prefix}${var.cluster_name}"
   retention_in_days = var.log_retention_in_days
 }
 

@@ -1,11 +1,11 @@
 resource "aws_security_group" "efs_access" {
   vpc_id = var.vpc_id
-  name   = "${var.cluster_name}-efs-access"
+  name   = "efs-access-${var.cluster_name}"
 
   revoke_rules_on_delete = true
 
   tags = {
-    Name = "${var.cluster_name}-efs-access"
+    Name = "efs-access-${var.cluster_name}"
   }
 }
 

@@ -10,7 +10,7 @@ locals {
       essential         = true
 
       linuxParameters = {
-        initProcessEnabled = false
+        initProcessEnabled = false // ensure false to use the linuxserver.io/wireguard image
         capabilities = {
           add = [
             "NET_ADMIN",
@@ -73,7 +73,7 @@ locals {
         },
         {
           name  = "DOCKER_MODS"
-          value = "andreswebs/wghealth:latest"
+          value = var.wg_docker_mods
         },
       ]
 
@@ -95,9 +95,9 @@ locals {
       logConfiguration = {
         logDriver = "awslogs"
         options = {
-          awslogs-group         = local.log_group_name
           awslogs-region        = local.region
-          awslogs-stream-prefix = "wireguard"
+          awslogs-group         = local.log_group_name
+          awslogs-stream-prefix = var.log_stream_prefix
         }
       }
 
