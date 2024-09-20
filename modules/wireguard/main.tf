@@ -13,12 +13,9 @@ data "aws_ami" "ecs_ami_latest" {
   owners = ["amazon"]
 }
 
-
 locals {
   region     = data.aws_region.current.name
   ecs_ami_id = data.aws_ami.ecs_ami_latest.id
-  // TODO:
-  // ecs_ami_id = "resolve:ssm:/aws/service/ecs/optimized-ami/amazon-linux-2023/recommended"
 
   user_data = base64encode(templatefile("${path.module}/tpl/userdata.tftpl", {
     cluster_name = var.cluster_name
