@@ -23,7 +23,7 @@ locals {
 
   instance_sg_ids = [
     aws_security_group.instance.id,
-    aws_security_group.efs_access.id,
+    module.efs.client_security_group.id,
   ]
 
 }
@@ -132,13 +132,13 @@ resource "aws_ecs_task_definition" "this" {
   requires_compatibilities = ["EC2"]
   execution_role_arn       = module.ecs_iam.role.execution.arn
   task_role_arn            = module.ecs_iam.role.task.arn
-  container_definitions    = local.container_definitions
+  container_definitions    = jsonencode([local.wg_container_definition])
 
   volume {
     name = local.wg_conf_name
     efs_volume_configuration {
       file_system_id     = module.efs.file_system.id
-      root_directory     = var.efs_root_dir_path
+      root_directory     = "/"
       transit_encryption = "ENABLED"
       authorization_config {
         iam = "ENABLED"

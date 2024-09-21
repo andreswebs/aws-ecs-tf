@@ -139,11 +139,6 @@ variable "app_gid" {
   default = 2000
 }
 
-variable "efs_root_dir_path" {
-  type    = string
-  default = "/wireguard"
-}
-
 variable "wg_serverurl" {
   description = "The URL of the WireGuard server"
   type        = string
@@ -173,7 +168,7 @@ variable "wg_docker_mods" {
 }
 
 variable "wg_internal_subnet" {
-  type    = string
+  type        = string
   description = "The internal subnet used by WireGuard; only change if it clashes with existing subnet ranges"
-  default = "10.13.13.0"
+  default     = "10.13.13.0"
 }

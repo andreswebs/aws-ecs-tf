@@ -10,5 +10,5 @@ module "ecs_iam" {
 resource "aws_iam_role_policy" "efs_access" {
   name   = "efs-access"
   role   = module.ecs_iam.role.task.name
-  policy = module.efs.client_policy.json
+  policy = module.efs.client_policy_document.json
 }
