@@ -1,6 +1,6 @@
 # Highly-Available WireGuard service on AWS ECS
 
-![Highly-Available WireGuard service on AWS ECS](./docs/ecs-wireguard.drawio.png "Highly-Available WireGuard service on AWS ECS")
+![Highly-Available WireGuard service on AWS ECS](./docs/ecs-wireguard.v2.drawio.png "Highly-Available WireGuard service on AWS ECS")
 
 ## Download peer configuration
 
