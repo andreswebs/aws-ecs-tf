@@ -21,7 +21,7 @@ locals {
     ]
 
     healthCheck = {
-      command = ["CMD-SHELL", "which ip  || exit 1"]
+      command = ["CMD-SHELL", "which ip || exit 1"]
     }
   }
 }
