@@ -23,3 +23,9 @@ variable "log_retention_in_days" {
   type        = number
   default     = 30
 }
+
+variable "tags" {
+  description = "(Optional) Map of tags to apply to created resources"
+  type        = map(string)
+  default     = {}
+}

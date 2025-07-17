@@ -5,6 +5,10 @@ resource "aws_ecs_cluster" "this" {
     name  = "containerInsights"
     value = "enabled"
   }
+
+  tags = merge(var.tags, {
+    Name = var.name
+  })
 }
 
 resource "aws_cloudwatch_log_group" "this" {
@@ -32,9 +36,9 @@ resource "aws_security_group" "this" {
 
   revoke_rules_on_delete = true
 
-  tags = {
+  tags = merge(var.tags, {
     Name = format("ecs-%s-alb", var.name)
-  }
+  })
 
   name = format("ecs-%s-alb", var.name)
 }
@@ -48,9 +52,9 @@ resource "aws_vpc_security_group_ingress_rule" "allow_http" {
 
   description = "Allow HTTP"
 
-  tags = {
+  tags = merge(var.tags, {
     Name = format("ecs-%s-alb-http", var.name)
-  }
+  })
 }
 
 resource "aws_vpc_security_group_ingress_rule" "allow_https" {
@@ -62,10 +66,9 @@ resource "aws_vpc_security_group_ingress_rule" "allow_https" {
 
   description = "Allow HTTPS"
 
-
-  tags = {
+  tags = merge(var.tags, {
     Name = format("ecs-%s-alb-https", var.name)
-  }
+  })
 }
 
 resource "aws_lb" "this" {
@@ -77,4 +80,8 @@ resource "aws_lb" "this" {
   enable_http2       = true
 
   enable_deletion_protection = false
+
+  tags = merge(var.tags, {
+    Name = var.name
+  })
 }
