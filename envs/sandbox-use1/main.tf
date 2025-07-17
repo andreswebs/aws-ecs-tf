@@ -5,16 +5,18 @@ locals {
 }
 
 locals {
-  task_role_name      = "ecs-${var.cluster_name}-task"
-  execution_role_name = "ecs-${var.cluster_name}-execution"
-  app_port            = 8080
+  task_role_name       = "ecs-${var.cluster_name}-task"
+  execution_role_name  = "ecs-${var.cluster_name}-execution"
+  codedeploy_role_name = "ecs-${var.cluster_name}-codedeploy"
+  app_port             = 8080
 }
 
 module "ecs_iam" {
-  source              = "andreswebs/ecs-iam/aws"
-  version             = "0.0.6"
-  task_role_name      = local.task_role_name
-  execution_role_name = local.execution_role_name
+  source               = "andreswebs/ecs-iam/aws"
+  version              = "0.0.7"
+  execution_role_name  = local.execution_role_name
+  task_role_name       = local.task_role_name
+  codedeploy_role_name = local.codedeploy_role_name
 }
 
 module "ecs_cluster" {
@@ -24,32 +26,15 @@ module "ecs_cluster" {
   public_subnet_ids = var.public_subnet_ids
 }
 
-resource "aws_lb_target_group" "this" {
-  # count       = 2
-  name        = var.cluster_name
-  target_type = "ip"
-  port        = local.app_port
-  protocol    = "HTTP"
-  vpc_id      = var.vpc_id
+module "ecs_target" {
+  source              = "../../modules/ecs-lb-web-target-bluegreen"
+  vpc_id              = var.vpc_id
+  target_group_name   = var.cluster_name
+  target_port         = local.app_port
+  load_balancer_arn   = module.ecs_cluster.alb.arn
+  acm_certificate_arn = var.acm_certificate_arn
 
-  health_check {
-    path                = "/"
-    matcher             = "200-399"
-    interval            = 10
-    unhealthy_threshold = 2
-  }
-}
-
-resource "aws_lb_listener" "http" {
-  load_balancer_arn = module.ecs_cluster.alb.arn
-  port              = 80
-  protocol          = "HTTP"
-
-  default_action {
-    type = "forward"
-    # target_group_arn = aws_lb_target_group.this[0].arn
-    target_group_arn = aws_lb_target_group.this.arn
-  }
+  depends_on = [module.ecs_cluster]
 }
 
 resource "aws_ecs_task_definition" "this" {
@@ -62,50 +47,21 @@ resource "aws_ecs_task_definition" "this" {
   task_role_arn            = module.ecs_iam.role.task.arn
 
   container_definitions = jsonencode([
-    {
-      name      = "app"
-      image     = "public.ecr.aws/andreswebs/busybox-httpd:latest"
-      essential = true
-
-      portMappings = [
-        {
-          containerPort = local.app_port
-          protocol      = "tcp"
-        },
-      ]
-
-      linuxParameters = {
-        initProcessEnabled = true
-      }
-
-      logConfiguration = {
-        logDriver = "awslogs"
-        options = {
-          awslogs-region        = local.region
-          awslogs-group         = module.ecs_cluster.log_group.name
-          awslogs-stream-prefix = "web"
-        }
-      }
-
-      healthCheck = {
-        command     = ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost:${local.app_port}/ || exit 1"]
-        interval    = 5
-        timeout     = 3
-        startPeriod = 2
-        retries     = 2
-      }
-
-    }
+    local.web_app_container_defintion,
   ])
 }
 
-resource "aws_ecs_service" "app" {
+resource "aws_ecs_service" "this" {
   name            = var.cluster_name
   cluster         = module.ecs_cluster.cluster.id
   task_definition = aws_ecs_task_definition.this.arn
   launch_type     = "FARGATE"
 
-  desired_count = 1
+  scheduling_strategy  = "REPLICA"
+  desired_count        = 1
+  force_new_deployment = true
+
+  health_check_grace_period_seconds = 30
 
   network_configuration {
     subnets          = var.private_subnet_ids
@@ -114,9 +70,18 @@ resource "aws_ecs_service" "app" {
   }
 
   load_balancer {
-    target_group_arn = aws_lb_target_group.this.arn
+    target_group_arn = module.ecs_target.target_group[0].arn
     container_name   = "app"
     container_port   = local.app_port
   }
 
+  deployment_controller {
+    type = "CODE_DEPLOY"
+  }
+
+  lifecycle {
+    ignore_changes = [task_definition, desired_count, load_balancer]
+  }
+
+  depends_on = [module.ecs_cluster]
 }

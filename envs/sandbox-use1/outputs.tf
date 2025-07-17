@@ -1,3 +1,3 @@
-output "lb_url" {
-  value = "https://${module.ecs_cluster.alb.dns_name}"
+output "app_url" {
+  value = "https://${local.app_domain_name}"
 }
