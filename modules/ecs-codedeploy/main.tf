@@ -42,7 +42,7 @@ resource "aws_codedeploy_deployment_group" "this" {
       }
 
       test_traffic_route {
-        listener_arns = var.alb_test_listener_arns
+        listener_arns = compact([var.alb_test_listener_arn])
       }
 
       dynamic "target_group" {

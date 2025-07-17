@@ -62,7 +62,7 @@ variable "auto_rollback_events" {
   default     = ["DEPLOYMENT_FAILURE"]
 
   validation {
-    condition     = length(var.auto_rollback_events) <= 3 && alltrue([for v in var.auto_rollback_events : contains(["DEPLOYMENT_FAILURE", "DEPLOYMENT_STOP_ON_ALARM", "DEPLOYMENT_STOP_ON_REQUEST"], v)])
+    condition     = length(var.auto_rollback_events) >= 1 && length(var.auto_rollback_events) <= 3 && alltrue([for v in var.auto_rollback_events : contains(["DEPLOYMENT_FAILURE", "DEPLOYMENT_STOP_ON_ALARM", "DEPLOYMENT_STOP_ON_REQUEST"], v)])
     error_message = "`auto_rollback_events` must be a list of at most 3 items, and only `DEPLOYMENT_FAILURE`, `DEPLOYMENT_STOP_ON_ALARM`, and `DEPLOYMENT_STOP_ON_REQUEST` are allowed."
   }
 }
@@ -83,10 +83,10 @@ variable "alb_listener_arn" {
   description = "ALB listener ARN"
 }
 
-variable "alb_test_listener_arns" {
-  type        = list(string)
-  description = "List of Arns of ALB Test listners"
-  default     = []
+variable "alb_test_listener_arn" {
+  type        = string
+  description = "ALB Test listener ARN"
+  default     = ""
 }
 
 variable "alb_target_group_names" {
@@ -95,6 +95,6 @@ variable "alb_target_group_names" {
 
   validation {
     condition     = length(var.auto_rollback_events) == 2
-    error_message = "Must contain exactly 2 items"
+    error_message = "`alb_target_group_names` must contain exactly 2 items"
   }
 }

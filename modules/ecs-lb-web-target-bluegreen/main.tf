@@ -8,14 +8,14 @@ resource "aws_lb_target_group" "this" {
 
   # https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lb_target_group#health_check
   health_check {
-    enabled             = true
-    port                = "traffic-port"
-    path                = "/"
-    matcher             = "200-499"
-    interval            = 10
-    timeout             = 5
-    unhealthy_threshold = 2
-    healthy_threshold   = 2
+    enabled             = var.health_check.enabled
+    port                = var.health_check.port
+    path                = var.health_check.path
+    matcher             = var.health_check.matcher
+    interval            = var.health_check.interval
+    timeout             = var.health_check.timeout
+    unhealthy_threshold = var.health_check.unhealthy_threshold
+    healthy_threshold   = var.health_check.healthy_threshold
   }
 }
 

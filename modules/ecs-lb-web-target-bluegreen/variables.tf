@@ -27,3 +27,20 @@ variable "target_port" {
     error_message = "The `target_port` must be between 1-65535."
   }
 }
+
+variable "health_check" {
+  type = object({
+    enabled             = optional(bool, true)
+    port                = optional(string, "traffic-port")
+    path                = optional(string, "/")
+    matcher             = optional(string, "200-499")
+    interval            = optional(number, 10)
+    timeout             = optional(number, 5)
+    unhealthy_threshold = optional(number, 2)
+    healthy_threshold   = optional(number, 2)
+  })
+
+  description = "Target group health check configuration"
+
+  default = {}
+}
