@@ -5,8 +5,8 @@ resource "aws_codedeploy_app" "this" {
 
 resource "aws_codedeploy_deployment_group" "this" {
   app_name               = aws_codedeploy_app.this.name
-  deployment_config_name = var.deployment_config_name
-  deployment_group_name  = var.deployment_group_name
+  deployment_config_name = var.codedeploy_deployment_config_name
+  deployment_group_name  = var.codedeploy_deployment_group_name
   service_role_arn       = var.codedeploy_service_role_arn
 
   auto_rollback_configuration {
@@ -47,13 +47,12 @@ resource "aws_codedeploy_deployment_group" "this" {
 
       dynamic "target_group" {
         for_each = var.alb_target_group_names
-        iterator = "tg_name"
+        iterator = tg_name
         content {
           name = tg_name.value
         }
       }
     }
-
   }
 
   lifecycle {
