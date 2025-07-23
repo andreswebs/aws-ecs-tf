@@ -29,3 +29,13 @@ variable "tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "acm_certificate_arns" {
+  description = "List of ACM certificate ARNs attached to the HTTPS listener"
+  type        = list(string)
+
+  validation {
+    error_message = "At least one ACM certificate ARN is required."
+    condition     = length(var.acm_certificate_arns) > 0
+  }
+}

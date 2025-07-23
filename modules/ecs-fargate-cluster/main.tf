@@ -85,3 +85,41 @@ resource "aws_lb" "this" {
     Name = var.name
   })
 }
+
+resource "aws_lb_listener" "http" {
+  load_balancer_arn = aws_lb.this.arn
+  port              = 80
+  protocol          = "HTTP"
+
+  default_action {
+    type = "redirect"
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
+  }
+}
+
+resource "aws_lb_listener" "https" {
+  load_balancer_arn = aws_lb.this.arn
+  port              = 443
+  protocol          = "HTTPS"
+  certificate_arn   = var.acm_certificate_arns[0]
+
+  default_action {
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "text/plain"
+      status_code  = 404
+      message_body = "Not Found"
+    }
+  }
+}
+
+resource "aws_lb_listener_certificate" "this" {
+  count           = length(var.acm_certificate_arns) - 1
+  certificate_arn = var.acm_certificate_arns[count.index + 1]
+  listener_arn    = aws_lb_listener.https.arn
+}

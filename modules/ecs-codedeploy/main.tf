@@ -1,3 +1,7 @@
+locals {
+  alb_test_listener_arns = compact([var.alb_test_listener_arn])
+}
+
 resource "aws_codedeploy_app" "this" {
   compute_platform = "ECS"
   name             = var.codedeploy_app_name
@@ -41,8 +45,12 @@ resource "aws_codedeploy_deployment_group" "this" {
         listener_arns = [var.alb_listener_arn]
       }
 
-      test_traffic_route {
-        listener_arns = compact([var.alb_test_listener_arn])
+      dynamic "test_traffic_route" {
+        for_each = local.alb_test_listener_arns
+        iterator = arn
+        content {
+          listener_arns = arn.value
+        }
       }
 
       dynamic "target_group" {

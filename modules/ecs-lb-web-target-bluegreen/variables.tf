@@ -3,16 +3,6 @@ variable "vpc_id" {
   description = "VPC ID"
 }
 
-variable "acm_certificate_arn" {
-  type        = string
-  description = "ACM certificate ARN"
-}
-
-variable "load_balancer_arn" {
-  type        = string
-  description = "Load balancer ARN"
-}
-
 variable "target_group_name" {
   type        = string
   description = "Target group name; a count suffix will be appended to it"
