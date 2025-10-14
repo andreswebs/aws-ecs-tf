@@ -1,0 +1,6 @@
+- Terraform (infrastructure as code)
+- AWS ECS (container orchestration)
+- Docker (linuxserver/wireguard image)
+- S6 overlay for process supervision
+- AWS services: EC2, VPC, Security Groups, CloudWatch, NLB, EFS, IAM
+- Shell scripting for AWS CLI operations

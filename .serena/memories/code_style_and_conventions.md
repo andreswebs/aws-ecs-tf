@@ -1,0 +1,7 @@
+- Indentation: 2 spaces (see .editorconfig)
+- Charset: UTF-8
+- End of line: LF
+- Trim trailing whitespace
+- Insert final newline
+- Terraform best practices: use variables, outputs, and modular structure
+- Resource and variable naming: descriptive, snake_case

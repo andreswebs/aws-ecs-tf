@@ -1,0 +1,5 @@
+- Root: meta files (.editorconfig, README.md, SECURITY.md, etc.)
+- envs/: environment-specific Terraform configs (e.g., sandbox-use1)
+- modules/: reusable Terraform modules (wireguard, jaeger, web-alb, etc.)
+- Each module: main.tf, variables.tf, outputs.tf, and related files
+- Some modules have tpl/ for templates and docs/ for documentation
