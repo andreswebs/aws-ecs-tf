@@ -1,1 +1,0 @@
-Vulnerabilities should be reported via email to andreswebs@pm.me. Response time is usually less than 48 hours. Contributors can remain anonymous if desired.

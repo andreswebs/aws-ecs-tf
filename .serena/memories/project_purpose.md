@@ -1,1 +1,1 @@
-This project provides a highly-available WireGuard VPN service on AWS ECS, managed via Terraform modules. It enables secure, scalable VPN deployments using AWS infrastructure and Docker containers.
+This project provides a multi-environment Terraform monorepo, consisting of environments and modules. It uses Terraform modules to deploy applications on AWS ECS. Each environment represents an AWS account.

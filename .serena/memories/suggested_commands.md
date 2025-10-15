@@ -1,19 +1,17 @@
 # Suggested Commands
 
 ## AWS CLI
-- aws ecs execute-command --cluster "${CLUSTER_NAME}" --task "${TASK_ID}" --container wireguard --interactive --command "/bin/bash"
+
+- Execute command on ECS task:
+  ```sh
+  aws ecs execute-command --cluster "${CLUSTER_NAME}" --task "${TASK_ID}" --container "${CONTAINER_NAME}" --interactive --command "${COMMAND}"
+  ```
 
 ## Terraform
-- terraform init
-- terraform plan
-- terraform apply
-- terraform destroy
 
-## General
-- cat /config/peer_<name>/peer_<name>.conf (inside container)
-
-## Utilities (macOS/Darwin)
-- git, ls, cd, grep, find, cat
-
-# Note
-No custom linting, formatting, or test commands found. Please add if available.
+```sh
+terraform init
+terraform plan
+terraform apply
+terraform destroy
+```

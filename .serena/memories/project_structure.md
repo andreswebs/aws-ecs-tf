@@ -1,5 +1,7 @@
-- Root: meta files (.editorconfig, README.md, SECURITY.md, etc.)
-- envs/: environment-specific Terraform configs (e.g., sandbox-use1)
-- modules/: reusable Terraform modules (wireguard, jaeger, web-alb, etc.)
-- Each module: main.tf, variables.tf, outputs.tf, and related files
-- Some modules have tpl/ for templates and docs/ for documentation
+- Project root: meta files and meta dirs:
+  - files: .editorconfig, .gitignore, README.md, SECURITY.md, UNLICENSE,
+  - dirs: .github/, .serena/, .vscode/
+- apps/ : subdirs are re-usable Terraform modules that use other modules under the modules/ dir; apps are "umbrella" modules that define complex applications (e.g. wireguard, jaeger, etc.)
+- design/ : contains spec documents for apps
+- envs/ : subdirs are Terraform root modules containing environment specific Terraform configs, each defining regional environments in a separate AWS account
+- modules/ : subdirs are standard re-usable Terraform modules, used as building blocks for apps; each module follows the standard Terraform module structure: main.tf, variables.tf, outputs.tf, and related files; some modules have tpl/ for templates or docs/ for documentation, etc.
