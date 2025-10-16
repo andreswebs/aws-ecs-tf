@@ -1,30 +1,32 @@
+locals {
+  memcached_port = 11211
+}
 
-resource "aws_security_group" "cache" {
-  name        = local.cache_security_group_name
-  description = var.cache_security_group_description
+resource "aws_security_group" "memcached" {
+  name        = "${var.name}-memcached"
+  description = "${var.name} Memcached"
   vpc_id      = local.vpc_id
 
   revoke_rules_on_delete = true
 
   tags = merge(var.tags, {
-    Name = local.cache_security_group_name
+    Name = "${var.name}-memcached"
   })
 }
 
-## TODO: ingress rule for memcached
-# resource "aws_vpc_security_group_ingress_rule" "allow_memcached" {
-#   security_group_id = aws_security_group.this.id
-#   ip_protocol       = "tcp"
-#   from_port         = 11211
-#   to_port           = 11211
-#   cidr_ipv4         = "" ## TODO <-- use the task SG instead
+resource "aws_vpc_security_group_ingress_rule" "allow_backend_to_memcached" {
+  security_group_id            = aws_security_group.memcached.id
+  ip_protocol                  = "tcp"
+  from_port                    = local.memcached_port
+  to_port                      = local.memcached_port
+  referenced_security_group_id = aws_security_group.backend.id
 
-#   description = "Allow HTTP"
+  description = "Allow backend"
 
-#   tags = merge(var.tags, {
-#     Name = format("%s-http", local.sg_name)
-#   })
-# }
+  tags = merge(var.tags, {
+    Name = "${var.name}-backend-to-memcached"
+  })
+}
 
 resource "aws_elasticache_serverless_cache" "this" {
   name               = var.name
@@ -32,10 +34,10 @@ resource "aws_elasticache_serverless_cache" "this" {
   description        = var.cache_description
   tags               = var.tags
   kms_key_id         = var.kms_key_id
-  security_group_ids = [aws_security_group.cache.id]
+  security_group_ids = [aws_security_group.memcached.id]
   subnet_ids         = var.private_subnet_ids
 
-  major_engine_version = "1.6"
+  major_engine_version = var.memcached_major_version
 
   cache_usage_limits {
     data_storage {
@@ -52,7 +54,7 @@ resource "aws_ssm_parameter" "memcached_endpoint" {
   name        = "${local.app_ssm_parameters_prefix}/memchached/endpoint"
   type        = "String"
   value       = local.cache_endpoint
-  description = "Zammad memcached endpoint"
+  description = "Memcached endpoint"
   overwrite   = true
   tags        = var.tags
 }

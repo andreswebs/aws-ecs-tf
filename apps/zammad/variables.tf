@@ -62,18 +62,6 @@ variable "private_subnet_ids" {
   }
 }
 
-variable "cache_security_group_name" {
-  type        = string
-  description = "Name of the security group associated with the ElastiCache serverless cache"
-  default     = null
-}
-
-variable "cache_security_group_description" {
-  type        = string
-  description = "Description for the cache security group"
-  default     = "Zammad Memcached serverless ElastiCache"
-}
-
 variable "ssm_parameters_prefix" {
   type        = string
   description = "Default prefix for generated SSM parameters"
@@ -93,4 +81,20 @@ variable "task_architecture" {
     condition     = contains(["X86_64", "ARM64"], var.task_architecture)
     error_message = "`task_architecture`can be either `X86_64` or `ARM64`"
   }
+}
+
+variable "memcached_major_version" {
+  type        = string
+  description = "ElastiCache Memcached major engine version"
+  default     = "1.6"
+  validation {
+    condition     = can(regex("^\\d+\\.\\d+$", var.memcached_major_version))
+    error_message = "`memcached_major_version` must be in the format x.x (e.g., 1.6, 1.5)"
+  }
+}
+
+variable "redis_max_memory" {
+  type        = string
+  description = "Value passed to the redis-server --maxmemory flag"
+  default     = "500mb"
 }

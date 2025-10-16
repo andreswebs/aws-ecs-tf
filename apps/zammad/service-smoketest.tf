@@ -22,15 +22,6 @@ locals {
       },
     ]
 
-    # portMappings = [
-    #   {
-    #     name          = ""
-    #     protocol      = "tcp"
-    #     containerPort = var.container_port
-    #     hostPort      = var.container_port
-    #   },
-    # ]
-
     logConfiguration = {
       logDriver = "awslogs"
       options = {
@@ -53,31 +44,6 @@ module "ecs_iam_smoketest" {
   task_role_name      = "${var.name}-task-smoketest"
   execution_role_name = "${var.name}-execution-smoketest"
   tags                = var.tags
-}
-
-
-resource "aws_security_group" "smoketest" {
-  name        = "${var.name}-smoketest"
-  description = "smoketest ECS service"
-  vpc_id      = local.vpc_id
-
-  revoke_rules_on_delete = true
-
-  tags = merge(var.tags, {
-    Name = "${var.name}-smoketest"
-  })
-}
-
-resource "aws_vpc_security_group_egress_rule" "smoketest" {
-  security_group_id = aws_security_group.smoketest.id
-  ip_protocol       = "-1"
-  cidr_ipv4         = "0.0.0.0/0"
-
-  description = "Allow all egress"
-
-  tags = merge(var.tags, {
-    Name = "${var.name}-smoketest"
-  })
 }
 
 resource "aws_ecs_task_definition" "smoketest" {
@@ -114,9 +80,8 @@ resource "aws_ecs_service" "smoketest" {
 
   network_configuration {
     subnets         = var.private_subnet_ids
-    security_groups = [aws_security_group.smoketest.id]
+    security_groups = [aws_security_group.backend.id]
   }
 
   tags = var.tags
 }
-
