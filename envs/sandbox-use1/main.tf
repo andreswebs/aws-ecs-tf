@@ -12,4 +12,5 @@ module "zammad" {
   private_subnet_ids      = var.private_subnet_ids
   rds_monitoring_role_arn = data.aws_iam_role.rds_monitoring.arn
   dbinit_lambda_image_uri = var.dbinit_lambda_image_uri
+  dbinit_enabled          = false
 }

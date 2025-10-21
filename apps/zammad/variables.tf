@@ -120,6 +120,11 @@ variable "dbinit_lambda_image_uri" {
   default = null
 }
 
+variable "dbinit_enabled" {
+  type    = bool
+  default = true
+}
+
 variable "db_secret_name" {
   type    = string
   default = "db"
