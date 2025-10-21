@@ -9,7 +9,7 @@ run "ssm_parameters_prefix_norm" {
   }
 
   assert {
-    condition     = local.ssm_parameters_prefix_norm == "/test"
+    condition     = local.ssm_parameters_prefix_norm == "test"
     error_message = "wanted /test, got ${local.ssm_parameters_prefix_norm}"
   }
 

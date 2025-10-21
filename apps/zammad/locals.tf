@@ -8,11 +8,30 @@ locals {
 
   cache_endpoint = "${aws_elasticache_serverless_cache.this.endpoint[0].address}:${aws_elasticache_serverless_cache.this.endpoint[0].port}"
 
-  ssm_parameters_prefix_norm = var.ssm_parameters_prefix == "" ? var.ssm_parameters_prefix : "/${trimprefix(trimsuffix(trimspace(var.ssm_parameters_prefix), "/"), "/")}"
-  app_ssm_parameters_prefix  = "${local.ssm_parameters_prefix_norm}/${var.name}"
+  ssm_parameters_prefix_norm = replace(replace("/${trimspace(var.ssm_parameters_prefix)}/", "/^\\/+/", "/"), "/\\/+$/", "/")
+  app_ssm_parameters_prefix  = "${local.ssm_parameters_prefix_norm}${var.name}"
+
+  secrets_manager_prefix_norm = replace(replace("/${trimspace(var.secrets_manager_prefix)}/", "/^\\/+/", "/"), "/\\/+$/", "/")
+  app_secrets_manager_prefix  = "${local.secrets_manager_prefix_norm}${var.name}"
+
+  db_secret_name_norm = var.db_secret_name == "" ? "db" : "${trimprefix(trimsuffix(trimspace(var.db_secret_name), "/"), "/")}"
+  db_secret_name      = "${local.app_secrets_manager_prefix}/${local.db_secret_name_norm}"
 
   service_discovery_namespace_name = "${var.name}.local"
 
   redis_endpoint = "${local.redis_container_name}.${local.service_discovery_namespace_name}:${local.redis_port}"
 
+  db_username = "zammad"
+  db_password = random_password.db.result
+
+  db_secret = {
+    engine               = module.db.db_instance.engine
+    host                 = module.db.db_instance.address
+    port                 = module.db.db_instance.port
+    dbname               = module.db.db_instance.db_name
+    dbInstanceIdentifier = module.db.db_instance.identifier
+    masterarn            = try(module.db.db_instance.master_user_secret[0].secret_arn, "")
+    username             = local.db_username
+    password             = local.db_password
+  }
 }

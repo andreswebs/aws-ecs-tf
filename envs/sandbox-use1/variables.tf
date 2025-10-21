@@ -10,3 +10,8 @@ variable "private_subnet_ids" {
 # variable "domain_name" {
 #   type = string
 # }
+
+variable "dbinit_lambda_image_uri" {
+  type    = string
+  default = null
+}

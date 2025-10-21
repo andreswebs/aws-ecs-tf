@@ -72,6 +72,16 @@ variable "ssm_parameters_prefix" {
   }
 }
 
+variable "secrets_manager_prefix" {
+  type        = string
+  description = "Default prefix for generated secrets"
+  default     = ""
+  validation {
+    condition     = var.secrets_manager_prefix != null
+    error_message = "`secrets_manager_prefix` must not be null."
+  }
+}
+
 variable "task_architecture" {
   description = "CPU architecture used for ECS tasks"
   type        = string
@@ -103,4 +113,23 @@ variable "rds_monitoring_role_arn" {
   type        = string
   description = "RDS monitoring role ARN"
   default     = null
+}
+
+variable "dbinit_lambda_image_uri" {
+  type    = string
+  default = null
+}
+
+variable "db_secret_name" {
+  type    = string
+  default = "db"
+  validation {
+    condition     = var.db_secret_name != null
+    error_message = "`db_secret_name` must not be null."
+  }
+}
+
+variable "db_secret_recovery_window_in_days" {
+  type    = number
+  default = 0
 }

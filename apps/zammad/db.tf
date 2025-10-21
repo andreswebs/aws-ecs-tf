@@ -35,3 +35,22 @@ resource "aws_vpc_security_group_ingress_rule" "allow_backend_to_db" {
     Name = "${var.name}-backend-to-db"
   })
 }
+
+resource "random_password" "db" {
+  length      = 32
+  special     = false
+  min_lower   = 1
+  min_numeric = 1
+  min_upper   = 1
+}
+
+resource "aws_secretsmanager_secret" "db" {
+  name                    = local.db_secret_name
+  kms_key_id              = var.kms_key_id
+  recovery_window_in_days = var.db_secret_recovery_window_in_days
+}
+
+resource "aws_secretsmanager_secret_version" "db" {
+  secret_id     = aws_secretsmanager_secret.db.id
+  secret_string = jsonencode(local.db_secret)
+}

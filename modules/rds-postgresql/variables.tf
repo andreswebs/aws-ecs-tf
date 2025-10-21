@@ -56,27 +56,27 @@ variable "db_default_parameters" {
       apply_method = "pending-reboot"
     },
     { name         = "debug_print_parse"
-      value        = "off"
+      value        = "0"
       apply_method = "pending-reboot"
     },
     { name         = "debug_print_rewritten"
-      value        = "off"
+      value        = "0"
       apply_method = "pending-reboot"
     },
     { name         = "debug_print_plan"
-      value        = "off"
+      value        = "0"
       apply_method = "pending-reboot"
     },
     { name         = "debug_pretty_print"
-      value        = "on"
+      value        = "1"
       apply_method = "pending-reboot"
     },
     { name         = "log_connections"
-      value        = "on"
+      value        = "1"
       apply_method = "pending-reboot"
     },
     { name         = "log_disconnections"
-      value        = "on"
+      value        = "1"
       apply_method = "pending-reboot"
     },
     { name         = "log_error_verbosity"
@@ -84,7 +84,7 @@ variable "db_default_parameters" {
       apply_method = "pending-reboot"
     },
     { name         = "log_hostname"
-      value        = "off"
+      value        = "0"
       apply_method = "pending-reboot"
     },
     { name         = "log_line_prefix"
@@ -100,7 +100,7 @@ variable "db_default_parameters" {
       apply_method = "pending-reboot"
     },
     { name         = "pgaudit.log_catalog"
-      value        = "off"
+      value        = "0"
       apply_method = "pending-reboot"
     },
     { name         = "pgaudit.log_level"
@@ -108,15 +108,15 @@ variable "db_default_parameters" {
       apply_method = "pending-reboot"
     },
     { name         = "pgaudit.log_parameter"
-      value        = "on"
+      value        = "1"
       apply_method = "pending-reboot"
     },
     { name         = "pgaudit.log_relation"
-      value        = "on"
+      value        = "1"
       apply_method = "pending-reboot"
     },
     { name         = "pgaudit.log_statement_once"
-      value        = "off"
+      value        = "0"
       apply_method = "pending-reboot"
     },
     { name         = "pgaudit.role"
