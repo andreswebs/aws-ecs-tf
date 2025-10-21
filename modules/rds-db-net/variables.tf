@@ -44,10 +44,7 @@ variable "ingress_rules_ipv4" {
     cidr_ipv4   = string
   }))
 
-  validation {
-    condition     = length(var.ingress_rules_ipv4) > 0
-    error_message = "At least one ingress rule must be provided."
-  }
+  default = []
 }
 
 variable "egress_rules_ipv4" {

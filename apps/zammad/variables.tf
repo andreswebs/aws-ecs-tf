@@ -98,3 +98,9 @@ variable "redis_max_memory" {
   description = "Value passed to the redis-server --maxmemory flag"
   default     = "500mb"
 }
+
+variable "rds_monitoring_role_arn" {
+  type        = string
+  description = "RDS monitoring role ARN"
+  default     = null
+}

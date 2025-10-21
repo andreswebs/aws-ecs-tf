@@ -9,7 +9,7 @@ locals {
   engine                         = "postgres"
   engine_major_version           = split(".", var.engine_version)[0]
   parameter_group_family         = "${local.engine}${local.engine_major_version}"
-  db_parameters                  = compact(concat(var.db_default_parameters, var.db_parameters))
+  db_parameters                  = setunion(var.db_default_parameters, var.db_parameters)
   read_replica_identifier_prefix = "${var.instance_identifier}${var.read_replica_identifier_infix}"
   parameter_group_name           = var.parameter_group_name != null && var.parameter_group_name != "" ? var.parameter_group_name : var.instance_identifier
   read_replica_instance_class    = var.read_replica_instance_class != null && var.read_replica_instance_class != "" ? var.read_replica_instance_class : var.instance_class

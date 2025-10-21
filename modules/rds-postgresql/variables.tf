@@ -329,7 +329,6 @@ variable "parameter_group_name" {
   default     = null
 }
 
-# Resource Naming Variables
 variable "instance_identifier" {
   description = "RDS instance identifier"
   type        = string
@@ -341,7 +340,6 @@ variable "security_group_ids" {
   default     = []
 }
 
-# CloudWatch Dashboard
 variable "dashboard_name" {
   description = "The name of the CloudWatch dashboard"
   type        = string
