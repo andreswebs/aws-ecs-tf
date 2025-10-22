@@ -3,6 +3,8 @@ module "lambda_base_dbinit" {
   source  = "andreswebs/lambda-base/aws"
   version = "0.7.0"
   name    = "${var.name}-dbinit"
+
+  tags = var.tags
 }
 
 module "iam_policy_document_dbinit_secret_access" {
@@ -31,9 +33,14 @@ module "lambda_dbinit" {
   iam_role_arn   = module.lambda_base_dbinit[0].iam_role.arn
   log_group_name = module.lambda_base_dbinit[0].log_group.name
 
+  security_group_ids = [aws_security_group.backend.id]
+  subnet_ids         = var.private_subnet_ids
+
   lambda_env = {
     DB_MIGRATION_SECRET = aws_secretsmanager_secret.db.arn
     DB_MIGRATION_ROLE   = "zammad_app"
     DB_SCHEMA           = "zammad_data"
   }
+
+  # tags = var.tags
 }
