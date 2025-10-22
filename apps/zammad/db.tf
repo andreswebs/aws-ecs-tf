@@ -15,6 +15,8 @@ module "db" {
   monitoring_role_arn         = var.rds_monitoring_role_arn
   db_name                     = "zammad"
 
+  engine_version = "17.6"
+
   kms_key_id                      = var.kms_key_id
   master_user_secret_kms_key_id   = var.kms_key_id
   performance_insights_kms_key_id = var.kms_key_id

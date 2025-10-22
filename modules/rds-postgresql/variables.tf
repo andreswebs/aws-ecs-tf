@@ -145,7 +145,7 @@ variable "db_parameters" {
 variable "engine_version" {
   description = "PostgreSQL engine version"
   type        = string
-  default     = "16.9"
+  default     = "17.6"
 
   validation {
     condition     = can(regex("^[0-9]+\\.[0-9]+$", var.engine_version))
