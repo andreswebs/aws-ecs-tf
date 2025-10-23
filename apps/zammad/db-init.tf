@@ -10,10 +10,13 @@ module "lambda_base_dbinit" {
 }
 
 module "iam_policy_document_dbinit_secret_access" {
-  count        = var.dbinit_enabled ? 1 : 0
-  source       = "andreswebs/secrets-access-policy-document/aws"
-  version      = "1.8.0"
-  secret_names = [aws_secretsmanager_secret.db.name]
+  count   = var.dbinit_enabled ? 1 : 0
+  source  = "andreswebs/secrets-access-policy-document/aws"
+  version = "1.8.0"
+  secret_names = compact([
+    local.db_master_secret_name,
+    aws_secretsmanager_secret.db.name
+  ])
 }
 
 resource "aws_iam_role_policy" "dbinit" {
@@ -43,8 +46,13 @@ module "lambda_dbinit" {
   tags = var.tags
 }
 
-resource "aws_lambda_invocation" "dbinit" {
-  count         = var.dbinit_enabled ? 1 : 0
-  function_name = module.lambda_dbinit[0].function.function_name
-  input         = jsonencode({})
-}
+/*
+  FIXME:
+  {"errorType":"error","errorMessage":"permission denied to change default privileges"}
+*/
+# resource "aws_lambda_invocation" "dbinit" {
+#   count         = var.dbinit_enabled ? 1 : 0
+#   depends_on    = [module.lambda_dbinit]
+#   function_name = module.lambda_dbinit[0].function.function_name
+#   input         = jsonencode({})
+# }

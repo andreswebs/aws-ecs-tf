@@ -21,8 +21,10 @@ locals {
 
   redis_endpoint = "${local.redis_container_name}.${local.service_discovery_namespace_name}:${local.redis_port}"
 
-  db_username = "zammad"
-  db_password = random_password.db.result
+  db_username           = "zammad"
+  db_password           = random_password.db.result
+  db_master_secret_arn  = try(module.db.db_instance.master_user_secret[0].secret_arn, "")
+  db_master_secret_name = replace(trimprefix(try(provider::aws::arn_parse(local.db_master_secret_arn).resource, ""), "secret:"), "/-.{6}$/", "")
 
   db_secret = {
     engine               = module.db.db_instance.engine
@@ -30,7 +32,7 @@ locals {
     port                 = module.db.db_instance.port
     dbname               = module.db.db_instance.db_name
     dbInstanceIdentifier = module.db.db_instance.identifier
-    masterarn            = try(module.db.db_instance.master_user_secret[0].secret_arn, "")
+    masterarn            = local.db_master_secret_arn
     username             = local.db_username
     password             = local.db_password
   }
