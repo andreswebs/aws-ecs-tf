@@ -50,9 +50,10 @@ module "lambda_dbinit" {
   FIXME:
   {"errorType":"error","errorMessage":"permission denied to change default privileges"}
 */
-# resource "aws_lambda_invocation" "dbinit" {
-#   count         = var.dbinit_enabled ? 1 : 0
-#   depends_on    = [module.lambda_dbinit]
-#   function_name = module.lambda_dbinit[0].function.function_name
-#   input         = jsonencode({})
-# }
+resource "aws_lambda_invocation" "dbinit" {
+  count         = var.dbinit_enabled ? 1 : 0
+  depends_on    = [module.lambda_dbinit]
+  function_name = module.lambda_dbinit[0].function.function_name
+  qualifier     = module.lambda_dbinit[0].alias.name
+  input         = jsonencode({})
+}
