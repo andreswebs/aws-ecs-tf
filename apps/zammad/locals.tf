@@ -34,4 +34,10 @@ locals {
     username             = local.db_username
     password             = local.db_password
   }
+
+  dbinit_env = {
+    DB_MIGRATION_SECRET = aws_secretsmanager_secret.db.arn
+    DB_MIGRATION_ROLE   = "zammad_app"
+    DB_SCHEMA           = "zammad_data"
+  }
 }

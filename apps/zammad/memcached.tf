@@ -32,7 +32,6 @@ resource "aws_elasticache_serverless_cache" "this" {
   name               = var.name
   engine             = "memcached"
   description        = var.cache_description
-  tags               = var.tags
   kms_key_id         = var.kms_key_id
   security_group_ids = [aws_security_group.memcached.id]
   subnet_ids         = var.private_subnet_ids
@@ -48,6 +47,10 @@ resource "aws_elasticache_serverless_cache" "this" {
       maximum = var.cache_ecpu_per_second_max
     }
   }
+
+  tags = merge(var.tags, {
+    Name = var.name
+  })
 }
 
 resource "aws_ssm_parameter" "memcached_endpoint" {

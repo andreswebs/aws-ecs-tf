@@ -4,6 +4,8 @@ module "db_net" {
   subnet_ids                    = var.private_subnet_ids
   db_security_group_name        = "${var.name}-db"
   db_security_group_description = "Database security group for ${var.name}"
+
+  tags = var.tags
 }
 
 module "db" {
@@ -13,15 +15,16 @@ module "db" {
   security_group_ids          = [module.db_net.security_group.id]
   parameter_group_description = "${var.name} DB parameters"
   monitoring_role_arn         = var.rds_monitoring_role_arn
+  engine_version              = var.postgres_major_version
   db_name                     = "zammad"
-
-  engine_version = "17.6"
 
   kms_key_id                      = var.kms_key_id
   master_user_secret_kms_key_id   = var.kms_key_id
   performance_insights_kms_key_id = var.kms_key_id
 
-  skip_final_snapshot = true
+  skip_final_snapshot = var.db_skip_final_snapshot
+
+  tags = var.tags
 }
 
 resource "aws_vpc_security_group_ingress_rule" "allow_backend_to_db" {
@@ -50,6 +53,7 @@ resource "aws_secretsmanager_secret" "db" {
   name                    = local.db_secret_name
   kms_key_id              = var.kms_key_id
   recovery_window_in_days = var.db_secret_recovery_window_in_days
+  tags                    = var.tags
 }
 
 resource "aws_secretsmanager_secret_version" "db" {

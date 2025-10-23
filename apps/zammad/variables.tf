@@ -138,3 +138,13 @@ variable "db_secret_recovery_window_in_days" {
   type    = number
   default = 0
 }
+
+variable "db_skip_final_snapshot" {
+  type    = bool
+  default = true
+}
+
+variable "postgres_major_version" {
+  type    = string
+  default = "17.6"
+}

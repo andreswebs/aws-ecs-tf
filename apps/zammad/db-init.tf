@@ -10,7 +10,7 @@ module "lambda_base_dbinit" {
 module "iam_policy_document_dbinit_secret_access" {
   count        = var.dbinit_enabled ? 1 : 0
   source       = "andreswebs/secrets-access-policy-document/aws"
-  version      = "1.7.0"
+  version      = "1.8.0"
   secret_names = [aws_secretsmanager_secret.db.name]
 }
 
@@ -23,9 +23,9 @@ resource "aws_iam_role_policy" "dbinit" {
 module "lambda_dbinit" {
   count   = var.dbinit_enabled ? 1 : 0
   source  = "andreswebs/lambda/aws"
-  version = "0.0.2"
+  version = "0.0.3"
 
-  depends_on = [aws_iam_role_policy.dbinit]
+  depends_on = [aws_iam_role_policy.dbinit, module.db]
 
   name      = "${var.name}-dbinit"
   image_uri = var.dbinit_lambda_image_uri
@@ -36,11 +36,13 @@ module "lambda_dbinit" {
   security_group_ids = [aws_security_group.backend.id]
   subnet_ids         = var.private_subnet_ids
 
-  lambda_env = {
-    DB_MIGRATION_SECRET = aws_secretsmanager_secret.db.arn
-    DB_MIGRATION_ROLE   = "zammad_app"
-    DB_SCHEMA           = "zammad_data"
-  }
+  lambda_env = local.dbinit_env
 
-  # tags = var.tags
+  tags = var.tags
+}
+
+resource "aws_lambda_invocation" "dbinit" {
+  count         = var.dbinit_enabled ? 1 : 0
+  function_name = module.lambda_dbinit[0].function.function_name
+  input         = jsonencode({})
 }

@@ -15,3 +15,7 @@ variable "dbinit_lambda_image_uri" {
   type    = string
   default = null
 }
+
+variable "kms_key_name" {
+  type = string
+}
