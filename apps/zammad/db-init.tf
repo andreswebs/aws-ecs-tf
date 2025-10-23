@@ -1,8 +1,10 @@
 module "lambda_base_dbinit" {
   count   = var.dbinit_enabled ? 1 : 0
   source  = "andreswebs/lambda-base/aws"
-  version = "0.7.0"
+  version = "0.8.0"
   name    = "${var.name}-dbinit"
+
+  vpc_permissions_enabled = true
 
   tags = var.tags
 }
