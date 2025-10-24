@@ -20,26 +20,18 @@ locals {
   log_group_name = aws_cloudwatch_log_group.this.name
 }
 
-/*
-TODO: research how to enable a flexible capacity provider approach
-and strategy
-
-The cluster must allow different setups:
-
-Fargate only (including spot), EC2 provider - research managed instances
-
-Refs:
-- <https://aws.amazon.com/blogs/aws/announcing-amazon-ecs-managed-instances-for-containerized-applications/>
-
-
 resource "aws_ecs_cluster_capacity_providers" "this" {
   cluster_name       = aws_ecs_cluster.this.name
-  capacity_providers = ["FARGATE", "FARGATE_SPOT"]
+  capacity_providers = var.capacity_providers
 
-  default_capacity_provider_strategy {
-    capacity_provider = "FARGATE"
-    base              = 1
-    weight            = 100
+  dynamic "default_capacity_provider_strategy" {
+    for_each = var.default_capacity_provider_strategies
+    iterator = s
+    content {
+      capacity_provider = s.value.capacity_provider
+      base              = s.value.base
+      weight            = s.value.weight
+    }
   }
+
 }
-*/

@@ -40,7 +40,7 @@ locals {
 
 module "ecs_iam_smoketest" {
   source              = "andreswebs/ecs-iam/aws"
-  version             = "0.0.8"
+  version             = "0.1.0"
   task_role_name      = "${var.name}-task-smoketest"
   execution_role_name = "${var.name}-execution-smoketest"
   tags                = var.tags

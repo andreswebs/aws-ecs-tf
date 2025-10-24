@@ -21,6 +21,17 @@ locals {
 
   redis_endpoint = "${local.redis_container_name}.${local.service_discovery_namespace_name}:${local.redis_port}"
 
+  elasticsearch_architecture_norm  = lower(var.elasticsearch_task_architecture)
+  elasticsearch_architecture_infix = local.elasticsearch_architecture_norm == "arm64" ? "arm64/" : ""
+  elasticsearch_ami_ssm_parameter  = "/aws/service/ecs/optimized-ami/amazon-linux-2023/${local.elasticsearch_architecture_infix}recommended/image_id"
+
+  elasticsearch_user_data = base64encode(templatefile("${path.module}/tpl/elasticsearch.userdata.tftpl", {
+    cluster_name                   = var.name
+    elasticsearch_data_volume_path = local.elasticsearch_data_volume_path
+  }))
+
+  ecs_cluster_capacity_providers = ["FARGATE", aws_ecs_capacity_provider.elasticsearch.name]
+
   db_username           = "zammad"
   db_password           = random_password.db.result
   db_master_secret_arn  = try(module.db.db_instance.master_user_secret[0].secret_arn, "")

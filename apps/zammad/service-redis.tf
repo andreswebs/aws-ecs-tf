@@ -51,7 +51,7 @@ locals {
 
 module "ecs_iam_redis" {
   source              = "andreswebs/ecs-iam/aws"
-  version             = "0.0.8"
+  version             = "0.1.0"
   task_role_name      = "${var.name}-task-${local.redis_container_name}"
   execution_role_name = "${var.name}-execution-${local.redis_container_name}"
   tags                = var.tags
