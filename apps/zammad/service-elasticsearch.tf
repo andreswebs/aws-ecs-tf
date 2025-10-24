@@ -1,9 +1,16 @@
 locals {
-  elasticsearch_image            = "bash:5.3.3-alpine3.22" ## WIP
-  elasticsearch_container_name   = "elasticsearch"
-  elasticsearch_port             = 9200
-  elasticsearch_data_volume_name = "elasticsearch-data"
-  elasticsearch_data_volume_path = "/usr/share/elasticsearch/data"
+  elasticsearch_image               = "elastic/elasticsearch:8.19.6"
+  elasticsearch_container_name      = "elasticsearch"
+  elasticsearch_port                = 9200
+  elasticsearch_home                = "/usr/share/elasticsearch"
+  elasticsearch_data_volume_name    = "elasticsearch-data"
+  elasticsearch_data_volume_path    = "${local.elasticsearch_home}/data"
+  elasticsearch_logs_volume_name    = "elasticsearch-logs"
+  elasticsearch_logs_volume_path    = "${local.elasticsearch_home}/logs"
+  elasticsearch_plugins_volume_name = "elasticsearch-plugins"
+  elasticsearch_plugins_volume_path = "${local.elasticsearch_home}/plugins"
+  elasticsearch_tmp_volume_name     = "elasticsearch-tmp"
+  elasticsearch_tmp_volume_path     = "${local.elasticsearch_home}/tmp"
 
   elasticsearch_container = {
     name              = local.elasticsearch_container_name
@@ -15,7 +22,28 @@ locals {
       initProcessEnabled = true
     }
 
-    command = ["sleep", "infinity"]
+    environment = [
+      {
+        name  = "bootstrap.memory_lock"
+        value = "true"
+      },
+      {
+        name  = "discovery.type"
+        value = "single-node"
+      },
+      {
+        name  = "xpack.security.enabled"
+        value = "false"
+      },
+      {
+        name  = "ES_TMPDIR"
+        value = local.elasticsearch_tmp_volume_path
+      },
+      {
+        name  = "ES_JAVA_OPTS"
+        value = "-Xlog:disable -Xlog:all=warning:stderr:utctime,level,tags -Xlog:gc=debug:stderr:utctime -Xms1g -Xmx1g"
+      },
+    ]
 
     portMappings = [
       {
@@ -36,13 +64,38 @@ locals {
     }
 
     healthCheck = {
-      command = ["CMD-SHELL", "echo ok || exit 1"]
+      command = [
+        "CMD",
+        "curl",
+        "--write-out",
+        "HTTP", "%%{http_code}",
+        "--fail",
+        "--silent",
+        "--output",
+        "/dev/null",
+        "http://localhost:${local.elasticsearch_port}/",
+      ]
     }
 
     mountPoints = [
       {
         sourceVolume  = local.elasticsearch_data_volume_name
         containerPath = local.elasticsearch_data_volume_path
+        readOnly      = false
+      },
+      {
+        sourceVolume  = local.elasticsearch_logs_volume_name
+        containerPath = local.elasticsearch_logs_volume_path
+        readOnly      = false
+      },
+      {
+        sourceVolume  = local.elasticsearch_plugins_volume_name
+        containerPath = local.elasticsearch_plugins_volume_path
+        readOnly      = false
+      },
+      {
+        sourceVolume  = local.elasticsearch_tmp_volume_name
+        containerPath = local.elasticsearch_tmp_volume_path
         readOnly      = false
       },
     ]
@@ -227,6 +280,23 @@ resource "aws_ecs_capacity_provider" "elasticsearch" {
 
 }
 
+resource "aws_service_discovery_service" "elasticsearch" {
+  name         = local.elasticsearch_container_name
+  namespace_id = aws_service_discovery_private_dns_namespace.this.id
+
+  dns_config {
+    namespace_id   = aws_service_discovery_private_dns_namespace.this.id
+    routing_policy = "MULTIVALUE"
+
+    dns_records {
+      type = "A"
+      ttl  = 10
+    }
+  }
+
+  tags = var.tags
+}
+
 resource "aws_ecs_task_definition" "elasticsearch" {
   family                   = local.elasticsearch_container_name
   network_mode             = "awsvpc"
@@ -239,6 +309,21 @@ resource "aws_ecs_task_definition" "elasticsearch" {
   volume {
     name      = local.elasticsearch_data_volume_name
     host_path = local.elasticsearch_data_volume_path
+  }
+
+  volume {
+    name      = local.elasticsearch_logs_volume_name
+    host_path = local.elasticsearch_logs_volume_path
+  }
+
+  volume {
+    name      = local.elasticsearch_plugins_volume_name
+    host_path = local.elasticsearch_plugins_volume_path
+  }
+
+  volume {
+    name      = local.elasticsearch_tmp_volume_name
+    host_path = local.elasticsearch_tmp_volume_path
   }
 }
 
@@ -260,9 +345,31 @@ resource "aws_ecs_service" "elasticsearch" {
     security_groups = [aws_security_group.elasticsearch.id]
   }
 
+  service_registries {
+    registry_arn = aws_service_discovery_service.elasticsearch.arn
+  }
+
   placement_constraints {
     type = "distinctInstance"
   }
 
   tags = var.tags
+}
+
+resource "aws_ssm_parameter" "elasticsearch_host" {
+  name        = "${local.app_ssm_parameters_prefix}/elasticsearch/host"
+  type        = "String"
+  value       = local.elasticsearch_host
+  description = "Elasticsearch host"
+  overwrite   = true
+  tags        = var.tags
+}
+
+resource "aws_ssm_parameter" "elasticsearch_port" {
+  name        = "${local.app_ssm_parameters_prefix}/elasticsearch/port"
+  type        = "String"
+  value       = local.elasticsearch_port
+  description = "Elasticsearch port"
+  overwrite   = true
+  tags        = var.tags
 }

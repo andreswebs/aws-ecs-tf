@@ -26,9 +26,11 @@ locals {
   elasticsearch_ami_ssm_parameter  = "/aws/service/ecs/optimized-ami/amazon-linux-2023/${local.elasticsearch_architecture_infix}recommended/image_id"
 
   elasticsearch_user_data = base64encode(templatefile("${path.module}/tpl/elasticsearch.userdata.tftpl", {
-    cluster_name                   = var.name
-    elasticsearch_data_volume_path = local.elasticsearch_data_volume_path
+    cluster_name       = var.name
+    elasticsearch_home = local.elasticsearch_home
   }))
+
+  elasticsearch_host = "${local.elasticsearch_container_name}.${local.service_discovery_namespace_name}"
 
   ecs_cluster_capacity_providers = ["FARGATE", aws_ecs_capacity_provider.elasticsearch.name]
 

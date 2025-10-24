@@ -158,7 +158,7 @@ variable "postgres_major_version" {
 
 variable "elasticsearch_instance_type" {
   type    = string
-  default = "t4g.small"
+  default = "t4g.medium"
 }
 
 variable "elasticsearch_task_architecture" {
