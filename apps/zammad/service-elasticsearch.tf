@@ -11,16 +11,13 @@ locals {
   elasticsearch_plugins_volume_path = "${local.elasticsearch_home}/plugins"
   elasticsearch_tmp_volume_name     = "elasticsearch-tmp"
   elasticsearch_tmp_volume_path     = "${local.elasticsearch_home}/tmp"
+  elasticsearch_java_opts           = "-Xlog:disable -Xlog:all=warning:stderr:utctime,level,tags -Xlog:gc=debug:stderr:utctime -Xms1g -Xmx1g"
 
   elasticsearch_container = {
     name              = local.elasticsearch_container_name
     image             = local.elasticsearch_image
     memoryReservation = 1024
     essential         = true
-
-    linuxParameters = {
-      initProcessEnabled = true
-    }
 
     environment = [
       {
@@ -41,7 +38,7 @@ locals {
       },
       {
         name  = "ES_JAVA_OPTS"
-        value = "-Xlog:disable -Xlog:all=warning:stderr:utctime,level,tags -Xlog:gc=debug:stderr:utctime -Xms1g -Xmx1g"
+        value = local.elasticsearch_java_opts
       },
     ]
 
@@ -271,7 +268,7 @@ resource "aws_ecs_capacity_provider" "elasticsearch" {
     auto_scaling_group_arn = aws_autoscaling_group.elasticsearch.arn
 
     managed_scaling {
-      status                    = "DISABLED"
+      status                    = "ENABLED"
       maximum_scaling_step_size = 1000
       minimum_scaling_step_size = 1
       target_capacity           = 100
@@ -347,10 +344,6 @@ resource "aws_ecs_service" "elasticsearch" {
 
   service_registries {
     registry_arn = aws_service_discovery_service.elasticsearch.arn
-  }
-
-  placement_constraints {
-    type = "distinctInstance"
   }
 
   tags = var.tags

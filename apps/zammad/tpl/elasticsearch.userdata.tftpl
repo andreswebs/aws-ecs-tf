@@ -15,3 +15,5 @@ mkdir -p "$${ES_HOME}/data"
 mkdir -p "$${ES_HOME}/logs"
 mkdir -p "$${ES_HOME}/plugins"
 mkdir -p "$${ES_HOME}/tmp"
+
+chown -R 1000:1000 "$${ES_HOME}"/*
