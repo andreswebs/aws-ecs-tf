@@ -150,6 +150,8 @@ resource "aws_ecs_service" "redis" {
 
   launch_type = "FARGATE"
 
+  wait_for_steady_state = true
+
   network_configuration {
     subnets         = var.private_subnet_ids
     security_groups = [aws_security_group.redis.id]

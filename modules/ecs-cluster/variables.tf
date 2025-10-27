@@ -41,3 +41,14 @@ variable "default_capacity_provider_strategies" {
     weight            = 100
   }]
 }
+
+variable "container_insights" {
+  description = "The cluster `containerInsights` value"
+  type        = string
+  default     = "enhanced"
+
+  validation {
+    condition     = contains(["disabled", "enabled", "enhanced"], var.container_insights)
+    error_message = "`container_insights` can be one of `disabled`, `enabled`, or `enhanced`."
+  }
+}

@@ -35,6 +35,14 @@ locals {
       command = ["CMD-SHELL", "echo ok || exit 1"]
     }
 
+    mountPoints = [
+      {
+        sourceVolume  = local.zammad_storage_volume_name
+        containerPath = local.zammad_storage_volume_path
+        readOnly      = false
+      },
+    ]
+
   }
 }
 
@@ -54,6 +62,19 @@ resource "aws_ecs_task_definition" "smoketest" {
     cpu_architecture        = var.task_architecture
   }
 
+  volume {
+    name = local.zammad_storage_volume_name
+
+    efs_volume_configuration {
+      file_system_id     = module.efs.file_system.id
+      root_directory     = "/"
+      transit_encryption = "ENABLED"
+      authorization_config {
+        iam = "ENABLED"
+      }
+    }
+  }
+
   tags = var.tags
 }
 
@@ -69,6 +90,8 @@ resource "aws_ecs_service" "smoketest" {
   desired_count       = 1
 
   launch_type = "FARGATE"
+
+  wait_for_steady_state = true
 
   network_configuration {
     subnets         = var.private_subnet_ids

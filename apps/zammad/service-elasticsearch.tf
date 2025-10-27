@@ -337,6 +337,8 @@ resource "aws_ecs_service" "elasticsearch" {
 
   launch_type = "EC2"
 
+  wait_for_steady_state = true
+
   network_configuration {
     subnets         = var.private_subnet_ids
     security_groups = [aws_security_group.elasticsearch.id]
