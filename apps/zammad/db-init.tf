@@ -46,10 +46,6 @@ module "lambda_dbinit" {
   tags = var.tags
 }
 
-/*
-  FIXME:
-  {"errorType":"error","errorMessage":"permission denied to change default privileges"}
-*/
 resource "aws_lambda_invocation" "dbinit" {
   count         = var.dbinit_enabled ? 1 : 0
   depends_on    = [module.lambda_dbinit]

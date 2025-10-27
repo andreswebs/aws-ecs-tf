@@ -38,20 +38,12 @@ locals {
   }
 }
 
-module "ecs_iam_smoketest" {
-  source              = "andreswebs/ecs-iam/aws"
-  version             = "0.1.0"
-  task_role_name      = "${var.name}-task-smoketest"
-  execution_role_name = "${var.name}-execution-smoketest"
-  tags                = var.tags
-}
-
 resource "aws_ecs_task_definition" "smoketest" {
   family                   = local.smoketest_container_name
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  execution_role_arn       = module.ecs_iam_smoketest.role.execution.arn
-  task_role_arn            = module.ecs_iam_smoketest.role.task.arn
+  execution_role_arn       = module.ecs_iam_zammad.role.execution.arn
+  task_role_arn            = module.ecs_iam_zammad.role.task.arn
   container_definitions    = jsonencode([local.smoketest_container])
 
   cpu    = 256

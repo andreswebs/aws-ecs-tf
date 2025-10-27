@@ -19,3 +19,7 @@ variable "dbinit_lambda_image_uri" {
 variable "kms_key_name" {
   type = string
 }
+
+variable "vpc_id" {
+  type = string
+}
