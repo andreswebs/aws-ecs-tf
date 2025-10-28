@@ -41,6 +41,25 @@ resource "aws_vpc_security_group_ingress_rule" "allow_backend_to_db" {
   })
 }
 
+/*
+  This is needed because the zammad-nginx service does a check on
+  the database when initializing, to verify that migrations have completed.
+  See: https://github.com/zammad/zammad/blob/5509667d1c3da2b28a1870f3bced23255341c587/bin/docker-entrypoint#L115
+*/
+resource "aws_vpc_security_group_ingress_rule" "allow_proxy_to_db" {
+  security_group_id            = module.db_net.security_group.id
+  ip_protocol                  = "tcp"
+  from_port                    = module.db.db_instance.port
+  to_port                      = module.db.db_instance.port
+  referenced_security_group_id = aws_security_group.proxy.id
+
+  description = "Allow proxy"
+
+  tags = merge(var.tags, {
+    Name = "${var.name}-proxy-to-db"
+  })
+}
+
 resource "random_password" "db" {
   length      = 32
   special     = false
