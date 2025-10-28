@@ -6,6 +6,19 @@ module "ecs_iam_zammad" {
   tags                = var.tags
 }
 
+module "iam_policy_document_zammad_secret_access" {
+  source  = "andreswebs/secrets-access-policy-document/aws"
+  version = "1.8.0"
+  secret_names = compact([
+    aws_secretsmanager_secret.db.name,
+  ])
+}
+
+resource "aws_iam_role_policy" "zammad_secrets" {
+  policy = module.iam_policy_document_zammad_secret_access.json
+  role   = module.ecs_iam_zammad.role.execution.id
+}
+
 resource "aws_iam_role_policy" "zammad_efs" {
   name   = "efs-access"
   policy = module.efs.client_policy_document.json
@@ -19,6 +32,7 @@ locals {
 
   ## See:
   ## https://github.com/zammad/zammad/blob/develop/bin/docker-entrypoint
+  ## https://docs.zammad.org/en/latest/appendix/configure-env-vars.html
 
   zammad_env = [
     {
@@ -62,10 +76,6 @@ locals {
       value = local.db_secret.username
     },
     {
-      name  = "POSTGRESQL_PASS"
-      value = local.db_secret.password
-    },
-    {
       name  = "POSTGRESQL_DB"
       value = "zammad"
     },
@@ -76,6 +86,10 @@ locals {
     {
       name  = "POSTGRESQL_OPTIONS"
       value = "?pool=50&sslmode=require&channel_binding=require"
+    },
+    {
+      name  = "ZAMMAD_FQDN"
+      value = var.zammad_fqdn
     },
     {
       name  = "ZAMMAD_WEBSOCKET_HOST"
@@ -92,6 +106,13 @@ locals {
     {
       name  = "ZAMMAD_RAILSSERVER_PORT"
       value = tostring(local.zammad_railsserver_port)
+    },
+  ]
+
+  zammad_secrets = [
+    {
+      name      = "POSTGRESQL_PASS"
+      valueFrom = "${aws_secretsmanager_secret.db.arn}:password::"
     },
   ]
 

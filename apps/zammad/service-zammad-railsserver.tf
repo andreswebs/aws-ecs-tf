@@ -6,6 +6,7 @@ locals {
     name        = local.zammad_railsserver_container_name
     image       = local.zammad_image
     environment = local.zammad_env
+    secrets     = local.zammad_secrets
     mountPoints = local.zammad_volume_mounts
     healthCheck = local.zammad_healthcheck
     command     = ["zammad-railsserver"]

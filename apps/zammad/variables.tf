@@ -186,3 +186,7 @@ variable "lb_lister_rule_priority" {
 variable "lb_security_group_id" {
   type = string
 }
+
+variable "zammad_fqdn" {
+  type = string
+}

@@ -35,6 +35,7 @@ module "zammad" {
   lb_listener_arn         = module.alb.listener.https.arn
   lb_lister_rule_priority = 100
   lb_security_group_id    = module.alb.sg.id
+  zammad_fqdn             = local.zammad_app_domain_name
 }
 
 resource "aws_route53_record" "zammad" {

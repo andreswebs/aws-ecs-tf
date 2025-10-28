@@ -6,6 +6,7 @@ locals {
     name        = local.zammad_nginx_container_name
     image       = local.zammad_image
     environment = local.zammad_env
+    secrets     = local.zammad_secrets
     healthCheck = local.zammad_healthcheck
     command     = ["zammad-nginx"]
 

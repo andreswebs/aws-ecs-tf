@@ -15,7 +15,7 @@ module "iam_policy_document_dbinit_secret_access" {
   version = "1.8.0"
   secret_names = compact([
     local.db_master_secret_name,
-    aws_secretsmanager_secret.db.name
+    aws_secretsmanager_secret.db.name,
   ])
 }
 
