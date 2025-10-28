@@ -45,6 +45,20 @@ resource "aws_vpc_security_group_ingress_rule" "from_alb" {
   }
 }
 
+resource "aws_vpc_security_group_egress_rule" "to_proxy" {
+  security_group_id            = var.lb_security_group_id
+  ip_protocol                  = "tcp"
+  from_port                    = local.zammad_nginx_port
+  to_port                      = local.zammad_nginx_port
+  referenced_security_group_id = aws_security_group.proxy.id
+
+  description = "Allow egress to ${var.name}-proxy"
+
+  tags = merge(var.tags, {
+    Name = "${var.name}-proxy"
+  })
+}
+
 resource "aws_security_group" "backend" {
   name        = "${var.name}-backend"
   description = "${var.name} backend"
