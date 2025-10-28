@@ -6,7 +6,6 @@ locals {
     name        = local.zammad_nginx_container_name
     image       = local.zammad_image
     environment = local.zammad_env
-    mountPoints = local.zammad_volume_mounts
     healthCheck = local.zammad_healthcheck
     command     = ["zammad-nginx"]
 
@@ -46,19 +45,6 @@ resource "aws_ecs_task_definition" "zammad_nginx" {
   runtime_platform {
     operating_system_family = "LINUX"
     cpu_architecture        = var.task_architecture
-  }
-
-  volume {
-    name = local.zammad_storage_volume_name
-
-    efs_volume_configuration {
-      file_system_id     = module.efs.file_system.id
-      root_directory     = "/"
-      transit_encryption = "ENABLED"
-      authorization_config {
-        iam = "ENABLED"
-      }
-    }
   }
 
   tags = var.tags
