@@ -68,6 +68,14 @@ locals {
       value = "zammad"
     },
     {
+      name  = "NGINX_SERVER_SCHEME"
+      value = "https"
+    },
+    {
+      name  = "NGINX_PORT"
+      value = tostring(local.zammad_nginx_port)
+    },
+    {
       name  = "POSTGRESQL_HOST"
       value = local.db_secret.host
     },
