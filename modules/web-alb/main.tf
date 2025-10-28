@@ -75,6 +75,8 @@ resource "aws_lb_listener" "http" {
       status_code = "HTTP_301"
     }
   }
+
+  tags = var.tags
 }
 
 resource "aws_lb_listener" "https" {
@@ -92,6 +94,8 @@ resource "aws_lb_listener" "https" {
       message_body = "Not Found"
     }
   }
+
+  tags = var.tags
 }
 
 resource "aws_lb_listener_certificate" "this" {

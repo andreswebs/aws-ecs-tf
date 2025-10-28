@@ -55,4 +55,7 @@ locals {
     DB_MIGRATION_ROLE   = "zammad_app"
     DB_SCHEMA           = "zammad_data"
   }
+
+  zammad_websocket_host   = "${local.zammad_websocket_container_name}.${local.service_discovery_namespace_name}"
+  zammad_railsserver_host = "${local.zammad_railsserver_container_name}.${local.service_discovery_namespace_name}"
 }

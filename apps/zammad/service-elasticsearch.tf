@@ -149,7 +149,7 @@ resource "aws_vpc_security_group_ingress_rule" "allow_backend_to_elasticsearch" 
   description = "Allow backend"
 
   tags = merge(var.tags, {
-    Name = "${var.name}-backend-to-${local.elasticsearch_container_name}"
+    Name = "${var.name}-backend"
   })
 }
 

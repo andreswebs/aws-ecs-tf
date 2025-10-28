@@ -170,3 +170,19 @@ variable "elasticsearch_task_architecture" {
     error_message = "`elasticsearch_task_architecture` can be either `X86_64` or `ARM64`"
   }
 }
+
+variable "app_domain_name" {
+  type = string
+}
+
+variable "lb_listener_arn" {
+  type = string
+}
+
+variable "lb_lister_rule_priority" {
+  type = number
+}
+
+variable "lb_security_group_id" {
+  type = string
+}

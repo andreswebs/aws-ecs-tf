@@ -17,6 +17,9 @@ locals {
   zammad_storage_volume_name = "zammad-storage"
   zammad_storage_volume_path = "/opt/zammad/storage"
 
+  ## See:
+  ## https://github.com/zammad/zammad/blob/develop/bin/docker-entrypoint
+
   zammad_env = [
     {
       name  = "REDIS_URL"
@@ -73,6 +76,22 @@ locals {
     {
       name  = "POSTGRESQL_OPTIONS"
       value = "?pool=50&sslmode=require&channel_binding=require"
+    },
+    {
+      name  = "ZAMMAD_WEBSOCKET_HOST"
+      value = local.zammad_websocket_host
+    },
+    {
+      name  = "ZAMMAD_WEBSOCKET_PORT"
+      value = tostring(local.zammad_websocket_port)
+    },
+    {
+      name  = "ZAMMAD_RAILSSERVER_HOST"
+      value = local.zammad_railsserver_host
+    },
+    {
+      name  = "ZAMMAD_RAILSSERVER_PORT"
+      value = tostring(local.zammad_railsserver_port)
     },
   ]
 

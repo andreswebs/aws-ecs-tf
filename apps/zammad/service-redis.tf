@@ -79,7 +79,7 @@ resource "aws_vpc_security_group_ingress_rule" "allow_backend_to_redis" {
   description = "Allow backend"
 
   tags = merge(var.tags, {
-    Name = "${var.name}-backend-to-${local.redis_container_name}"
+    Name = "${var.name}-backend"
   })
 }
 
