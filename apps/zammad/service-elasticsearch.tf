@@ -153,6 +153,25 @@ resource "aws_vpc_security_group_ingress_rule" "allow_backend_to_elasticsearch" 
   })
 }
 
+/*
+  This is needed because the zammad-nginx service does a check on
+  the database when initializing.
+  See: https://github.com/zammad/zammad/blob/5509667d1c3da2b28a1870f3bced23255341c587/bin/docker-entrypoint#L115
+*/
+resource "aws_vpc_security_group_ingress_rule" "allow_proxy_to_elasticsearch" {
+  security_group_id            = aws_security_group.elasticsearch.id
+  ip_protocol                  = "tcp"
+  from_port                    = local.elasticsearch_port
+  to_port                      = local.elasticsearch_port
+  referenced_security_group_id = aws_security_group.proxy.id
+
+  description = "Allow proxy"
+
+  tags = merge(var.tags, {
+    Name = "${var.name}-proxy"
+  })
+}
+
 resource "aws_vpc_security_group_egress_rule" "elasticsearch_https" {
   security_group_id = aws_security_group.elasticsearch.id
   ip_protocol       = "tcp"
