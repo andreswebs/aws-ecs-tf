@@ -69,11 +69,11 @@ resource "aws_ecs_service" "zammad_nginx" {
     security_groups = [aws_security_group.proxy.id]
   }
 
-  load_balancer {
-    target_group_arn = aws_lb_target_group.this.arn
-    container_name   = local.zammad_nginx_container_name
-    container_port   = local.zammad_nginx_port
-  }
+  # load_balancer {
+  #   target_group_arn = aws_lb_target_group.this.arn
+  #   container_name   = local.zammad_nginx_container_name
+  #   container_port   = local.zammad_nginx_port
+  # }
 
   depends_on = [aws_ecs_service.zammad_websocket, aws_ecs_service.zammad_railsserver]
 
