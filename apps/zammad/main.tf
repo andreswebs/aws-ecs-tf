@@ -118,9 +118,9 @@ resource "aws_lb_target_group" "this" {
     port                = "traffic-port"
     path                = "/"
     matcher             = "200-499"
-    interval            = 10
-    timeout             = 5
-    unhealthy_threshold = 2
+    interval            = 30
+    timeout             = 10
+    unhealthy_threshold = 10
     healthy_threshold   = 2
   }
 
