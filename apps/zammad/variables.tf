@@ -171,10 +171,6 @@ variable "elasticsearch_task_architecture" {
   }
 }
 
-variable "app_domain_name" {
-  type = string
-}
-
 variable "lb_listener_arn" {
   type = string
 }
